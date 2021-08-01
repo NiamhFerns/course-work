@@ -1,3 +1,9 @@
+/*
+    Niamh Ferns
+    21007069
+    Binary/Decimal number converter.
+*/
+
 #include <iostream>
 #include <string>
 
