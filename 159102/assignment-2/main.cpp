@@ -1,35 +1,33 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <iomanip>
 
 // globals
 // pc = program counter, ir = instuction register.
-int memory[256] = {0}, reg[16], pc = 0, ir;
+int memory[256] = {0}, reg[16], pc = 0, ir = 0;
 bool halted = 0;
 
-// FUNCTIONS
-
-// Go through and store all the instuctions from the txt file and move all the
-// various instruction nums to memory.
 void loadInstructions(std::string instuctionsPath);
-void fetchInstruction();
-void decodeInstruction(int cache[4]);
-void executeInstruction(int cache[4]);
+void fetchInstruction();                                // Load instruction register and increment program counter.
+void decodeInstruction(int *opcode, int operand[3]);    // Decode instruction from ir into opcode and individual operands.
+void executeInstruction(int *opcode, int operand[3]);    // Execute appopriate opcode and operands.
 
 int main() {
     std::string userInput = "";
     std::cout << "Enter the file name of the MASSEY machine code: ";
     getline(std::cin, userInput);
+    std::cout << std::endl;
 
     // Boot up the MASSEY machine.
     loadInstructions(userInput);
+    int opcode = 0, operand[3] = {0};
     while (!halted && pc < 256) {
-        int cache[4] = {0};
-        fetchInstruction();
-        decodeInstruction(cache);
-        executeInstruction(cache);
-        ++pc;
+       fetchInstruction();
+       decodeInstruction(&opcode, operand);
+       executeInstruction(&opcode, operand);
     }
+    if (pc > 255 && !halted) std::cout << "FATAL ERROR: Machine ran out of memory!\n";
 
     return 0;
 }
@@ -42,25 +40,15 @@ void loadInstructions(std::string instuctionsPath) {
         std::cout << "Sorry, but that file doesn't seem to be in the in your programs current directory. Exiting...\n";
     }
 
-    int instuction = 0;
-    std::string currentLine;
-
-    while (std::getline(commands, currentLine)) {
-        // to load into memory we need to convert each char from hex to binary
-        for (int i = 0; i < 4; ++i) { // this will break without more checks but the notes said to not validate input so...
-            memory[instuction] = memory[instuction] << 4; // All instuctions are seperated by a
-            if (currentLine[i] <= '9') {
-                memory[instuction] += currentLine[i] - 48;
-                continue;
-            }
-
-            memory[instuction] += toupper(currentLine[i]) - 55;
-        }
-
-        ++instuction;
+    int i = 0, currentLine;
+    while (commands >> std::hex >> currentLine) {
+        memory[i] = currentLine;
+        std::cout << std::hex << "Memory[" << i << "] = " << std::uppercase << std::setw(4) << std::setfill('0') << memory[i] << std::endl;
+        ++i;
     }
 
     commands.close();
+    std::cout << std::endl;
 }
 
 void fetchInstruction() {
@@ -68,87 +56,92 @@ void fetchInstruction() {
     ++pc;
 }
 
-void decodeInstruction(int cache[4]) {
-    // NOTE: The part is 0 indexed. EG: In 3RXY to access the register we need part = 1.
-    for (int i = 0; i < 4; ++i) {
-        int mask = (0xF000 >> i * 4);
-        cache[i] = (ir & mask) >> ((3 - i) * 4);
+void decodeInstruction(int *opcode, int operand[3]) {
+    // First we get the opcode.
+    *opcode = (ir & 0xF000) >> 12;
+
+    // Then we fill out an array of our operands
+    for (int i = 0; i < 3; ++i) {
+        int mask = (0xF00 >> (i * 4)); // Set or mask to match the correct part of the ir. (Left --> Right)
+        operand[i] = (ir & mask) >> (4 * (2 - i)); // Set the apropriate operand and shift it to the right so it's a single hex digit.
     }
 }
 
-void executeInstruction(int cache[4]) {
-    std::cout << std::hex << ir;
-    switch (cache[0]) {
-        case 1:
-            reg[cache[1]] = (cache[2] << 4) + cache[3];
-            std::cout << std::hex << "    R" << cache[1] << " = " << reg[cache[1]];
+void executeInstruction(int *opcode, int operand[3]) {
+    std::cout << std::endl << std::hex << std::setw(4) << std::setfill('0') << ir << "    PC = " << std::setw(2) << std::setfill('0') << pc;
+
+    // NOTE: Each command comment follows the structure opcode, operand 1, operand 2, operand 3.
+    switch (*opcode) {
+        case 1: // 1RXY: Load R with value XY.
+            reg[operand[0]] = (operand[1] << 4) + operand[2];
+            std::cout << std::hex << "    R" << operand[0] << " = " << std::setw(4) << reg[operand[0]];
             break;
 
-        case 2:
-            reg[cache[2]] = reg[cache[3]];
-            std::cout << std::hex << "    R" << cache[2] << " = " << reg[cache[2]];
+        case 2: // 20RS: Load R with S.
+            reg[operand[1]] = reg[operand[2]];
+            std::cout << std::hex << "    R" << operand[1] << " = " << std::setw(4) << reg[operand[1]];
             break;
 
-        case 3:
-            reg[cache[1]] = memory[(cache[2] << 4) + cache[3]];
-            std::cout << std::hex << "    R" << cache[1] << " = " << reg[cache[1]];
+        case 3: // 3RXY: Load R with memory at XY.
+            reg[operand[0]] = memory[(operand[1] << 4) + operand[2]];
+            std::cout << std::hex << "    R" << operand[0] << " = " << std::setw(4) << reg[operand[0]];
             break;
 
-        case 4:
-            memory[(cache[2] << 4) + cache[3]] = reg[cache[1]];
-            std::cout << std::hex << "    Memory[" << (cache[2] << 4) + cache[3] << "] = " << reg[cache[1]];
+        case 4: // 4RXY: Store R into memory at XY.
+            memory[(operand[1] << 4) + operand[2]] = reg[operand[0]];
+            std::cout << std::hex << "    Memory[" << std::setw(2) << (operand[1] << 4) + operand[2] << "] = " << std::setw(4) << reg[operand[0]];
             break;
 
-        case 6:
-            reg[cache[1]] = reg[cache[2]] + reg[cache[3]];
-            std::cout << std::hex << "    R" << cache[1] << " = " << reg[cache[1]];
+        case 6: // 6RST: Add S and T then store the result in R.
+            reg[operand[0]] = reg[operand[1]] + reg[operand[2]] & 0x0000FFFF; // The mask here is to force max of 2 byte memory size.
+            std::cout << std::hex << "    R" << operand[0] << " = " << std::setw(4) << reg[operand[0]];
             break;
 
-        case 7:
-            reg[cache[2]] = reg[cache[2]] * -1;
-            std::cout << std::hex << "    R" << cache[2] << " = " << reg[cache[2]];
+        case 7: // 70R0: Negate the value in R.
+            reg[operand[1]] = reg[operand[1]] * - 1 & 0x0000FFFF; // The mask here is to force max of 2 byte memory size.
+            std::cout << std::hex << "    R" << operand[1] << " = " << std::setw(4) << reg[operand[1]];
             break;
 
-        case 8:
-            reg[cache[1]] = reg[cache[1]] << cache[3];
-            std::cout << std::hex << "    R" << cache[1] << " = " << reg[cache[1]];
+        case 8: // 8R0X: Bitshift R to the right by X.
+            reg[operand[0]] = reg[operand[0]] >> operand[2] & 0x0000FFFF; // The mask here is to force max of 2 byte memory size.
+            std::cout << std::hex << "    R" << operand[0] << " = " << std::setw(4) << reg[operand[0]];
             break;
 
-        case 9:
-            reg[cache[1]] = reg[cache[1]] >> cache[3];
-            std::cout << std::hex << "    R" << cache[1] << " = " << reg[cache[1]];
+        case 9: // 9R0X: Bitshift R to the left by X.
+            reg[operand[0]] = reg[operand[0]] << operand[2] & 0x0000FFFF; // The mask here is to force max of 2 byte memory size.
+            std::cout << std::hex << "    R" << operand[0] << " = " << std::setw(4) << reg[operand[0]];
             break;
 
-        case 0xA:
-            reg[cache[1]] = reg[cache[2]] & reg[cache[3]];
-            std::cout << std::hex << "    R" << cache[1] << " = " << reg[cache[1]];
+        case 0xA: // ARST: And S with T then store the result in R.
+            reg[operand[0]] = reg[operand[1]] & reg[operand[2]] & 0x0000FFFF; // The mask here is to force max of 2 byte memory size.
+            std::cout << std::hex << "    R" << operand[0] << " = " << std::setw(4) << reg[operand[0]];
             break;
 
-        case 0xB:
-            reg[cache[1]] = reg[cache[2]] | reg[cache[3]];
-            std::cout << std::hex << "    R" << cache[1] << " = " << reg[cache[1]];
+        case 0xB: // BRST: Or S with T then store the result in R.
+            reg[operand[0]] = reg[operand[1]] | reg[operand[2]] & 0x0000FFFF; // The mask here is to force max of 2 byte memory size.
+            std::cout << std::hex << "    R" << operand[0] << " = " << std::setw(4) << reg[operand[0]];
             break;
 
-        case 0xC:
-            reg[cache[1]] = reg[cache[2]] ^ reg[cache[3]];
-            std::cout << std::hex << "    R" << cache[1] << " = " << reg[cache[1]];
+        case 0xC: // CRST: Xor S with T then store the result in R.
+            reg[operand[0]] = reg[operand[1]] ^ reg[operand[2]] & 0x0000FFFF; // The mask here is to force max of 2 byte memory size.
+            std::cout << std::hex << "    R" << operand[0] << " = " << std::setw(4) << reg[operand[0]];
             break;
 
-        case 0xD:
-            if (reg[cache[1]] == reg[0]) {
-                pc = (cache[2] << 4) + cache[3];
-                std::cout << "    R" << cache[1] << "== R0 : JUMP";
+        case 0xD: // DRXY: Jump program counter to XY if the contents of R equal the contents of register 0.
+            if (reg[operand[0]] == reg[0]) {
+                pc = (operand[1] << 4) + operand[2];
+                std::cout << "    JUMP";
+                break;
             }
-            std::cout << "    R" << cache[1] << "!= R0 : NO JUMP";
+            std::cout << "    CONTINUE";
             break;
 
-        case 0xE:
+        case 0xE: // E000: Halt.
             halted = 1;
-            std::cout << "Halt\n";
+            std::cout << "    Halt\n";
             break;
 
         default:
-            std::cout << "    This is not a valid instruction... \n";
+            std::cout << "    Skipping invalid instruction...";
     }
-    if (!halted) std::cout << std::hex << "    PC = " << pc << std::endl;
 }
