@@ -1,16 +1,15 @@
+// Niamh Kirsty Ferns - 21007069 - MASSEY Machine Simulator
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <iomanip>
 
-// globals
-// pc = program counter, ir = instuction register.
 int memory[256] = {0}, reg[16], pc = 0, ir = 0;
 bool halted = 0;
 
 void loadInstructions(std::string instuctionsPath);
-void fetchInstruction();                                // Load instruction register and increment program counter.
-void decodeInstruction(int *opcode, int operand[3]);    // Decode instruction from ir into opcode and individual operands.
+void fetchInstruction();                                 // Load instruction register and increment program counter.
+void decodeInstruction(int *opcode, int operand[3]);     // Decode instruction from ir into opcode and individual operands.
 void executeInstruction(int *opcode, int operand[3]);    // Execute appopriate opcode and operands.
 
 int main() {
@@ -21,14 +20,15 @@ int main() {
 
     // Boot up the MASSEY machine.
     loadInstructions(userInput);
+    std::cout << "SIMULATING MASSEY MACHINE...\nIR      PC    Result\n-------------------------------";
     int opcode = 0, operand[3] = {0};
     while (!halted && pc < 256) {
        fetchInstruction();
        decodeInstruction(&opcode, operand);
        executeInstruction(&opcode, operand);
     }
-    if (pc > 255 && !halted) std::cout << "FATAL ERROR: Machine ran out of memory!\n";
-
+    if (pc > 255 && !halted) std::cout << "\nFATAL ERROR: Infinite loop detected!\n";
+    std::cout << "Exiting simulation...\n";
     return 0;
 }
 
@@ -62,13 +62,13 @@ void decodeInstruction(int *opcode, int operand[3]) {
 
     // Then we fill out an array of our operands
     for (int i = 0; i < 3; ++i) {
-        int mask = (0xF00 >> (i * 4)); // Set or mask to match the correct part of the ir. (Left --> Right)
+        int mask = (0xF00 >> (i * 4));             // Set or mask to match the correct part of the ir. (Left --> Right)
         operand[i] = (ir & mask) >> (4 * (2 - i)); // Set the apropriate operand and shift it to the right so it's a single hex digit.
     }
 }
 
 void executeInstruction(int *opcode, int operand[3]) {
-    std::cout << std::endl << std::hex << std::setw(4) << std::setfill('0') << ir << "    PC = " << std::setw(2) << std::setfill('0') << pc;
+    std::cout << std::endl << std::hex << std::setw(4) << std::setfill('0') << ir << "    " << std::setw(2) << std::setfill('0') << (pc & 0xFF);
 
     // NOTE: Each command comment follows the structure opcode, operand 1, operand 2, operand 3.
     switch (*opcode) {
@@ -142,6 +142,7 @@ void executeInstruction(int *opcode, int operand[3]) {
             break;
 
         default:
-            std::cout << "    Skipping invalid instruction...";
+            std::cout << "    NO ACTION TAKEN";
+            break;
     }
 }
