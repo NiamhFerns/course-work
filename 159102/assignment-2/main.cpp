@@ -1,5 +1,4 @@
 // Niamh Kirsty Ferns - 21007069 - MASSEY Machine Simulator
-#include <ios>
 #include <iostream>
 #include <string>
 #include <fstream>
