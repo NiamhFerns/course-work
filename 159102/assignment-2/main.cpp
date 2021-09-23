@@ -17,10 +17,12 @@ int main() {
     std::string userInput = "";
     std::cout << "Enter the file name of the MASSEY machine code: ";
     getline(std::cin, userInput);
+    std::cout << std::endl;
 
     // Boot up the MASSEY machine.
     loadInstructions(userInput);
-    std::cout << "\nSIMULATING MASSEY MACHINE...\n"
+    if (halted) return 0;
+    std::cout << "SIMULATING MASSEY MACHINE...\n"
               << "IR      PC    Result\n"
               << "-------------------------------\n";
 
@@ -45,7 +47,8 @@ void loadInstructions(std::string instuctionsPath) {
 
     commands.open(instuctionsPath.c_str(), std::fstream::in);
     if (!commands.is_open()) {
-        std::cout << "Sorry, but that file doesn't seem to be in the in your programs current directory. Exiting...\n";
+        std::cout << "Sorry, but that file doesn't seem to be in the MASSEY Machine's current directory.\nExiting...";
+        halted = 1;
     }
 
     int i = 0, currentLine;
