@@ -1,0 +1,235 @@
+@charset "UTF-8";
+
+/* Shelfs and Shelf Types. */
+.shelf {
+    margin: 0 auto;
+    margin-top: 1rem;
+    width: 95%;
+
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+    align-items: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    background-color: var(--bg-1);
+    border-radius: 0.5rem;
+}
+
+.stype-user {
+    height: 45%;
+    margin-top: 0;
+    flex-grow: 1;
+}
+
+.stype-split {
+    height: 45%;
+    margin-top: 0;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.stype-dev {
+    height: 45%;
+}
+
+.shelf-item-full {
+    width: 25%;
+    height: 100%;
+    background-color: var(--bg-1);
+    opacity: 0.9;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.shelf-item-full > * {
+    opacity: 1;
+    margin: 1rem 1rem;
+}
+
+.shelf-item-full h3 {
+    margin-top: 2rem;
+}
+
+.shelf-item-full > a {
+    align-self: center;
+    margin-bottom: 2rem;
+    margin-top: auto;
+    color: var(--high-6);
+    font-weight: 600;
+}
+
+.shelf-item-full > a:hover {
+    color: var(--high-5);
+    text-decoration: underline;
+}
+
+.redfall {
+    background-image: url(../media/new-games/redfall.jpg);
+    background-repeat: no-repeat;
+    background-position: 0 8%;
+    background-size: cover;
+}
+
+.deathloop {
+    background-image: url(../media/new-games/deathloop.jpg);
+    background-repeat: no-repeat;
+    background-position: 0 8%;
+    background-size: cover;
+}
+
+.starfield {
+    background-image: url(../media/new-games/starfield.jpg);
+    background-repeat: no-repeat;
+    background-position: 0 25%;
+    background-size: cover;
+}
+
+.fallout-76 {
+    background-image: url(../media/game-artwork/fallout-76.jpg);
+    background-repeat: no-repeat;
+    background-position: 0 40%;
+    background-size: cover;
+}
+
+.arkane-studios {
+    background-image: url(../media/ui/arcane-studios.jpg);
+    background-repeat: no-repeat;
+    background-position: 0 8%;
+    background-size: cover;
+}
+
+.arkane-studios h1 {
+    padding: 1rem;
+    background-color: var(--bg-2);
+    border-radius: 0.5rem;
+    box-shadow: 3px 3px 10px 1px #000000AA;
+}
+
+.bethesda {
+    background-image: url(../media/ui/bethesda.png);
+    background-repeat: no-repeat;
+    background-position: 0 8%;
+    background-size: cover;
+}
+
+.bethesda h1 {
+    padding: 1rem;
+    background-color: var(--bg-2);
+    border-radius: 0.5rem;
+    box-shadow: 3px 3px 10px 1px #000000AA;
+}
+
+/* Shelf Types */
+.shelf-item {
+    width: 12.3rem;
+    min-width: 12.3rem;
+    height: 18rem;
+    margin: 1rem 0rem 1rem 1rem;
+
+    overflow-y: hidden;
+
+    background-color: var(--bg-3);
+    border: 2px solid var(--bg-2);
+    border-radius: 0.5rem;
+}
+
+.shelf-item-relative {
+    min-width: 12.8rem;
+    max-width: 12.8rem;
+    height: 87%;
+    margin: 1rem 0rem 1rem 1rem;
+
+    overflow-y: hidden;
+
+    background-color: var(--bg-3);
+    border: 2px solid var(--bg-2);
+    border-radius: 0.5rem;
+}
+
+/* Shelf Item Effects */
+.shelf-item:hover {
+    border: 2px solid var(--high-6);
+    box-shadow: 3px 3px 10px 2px #000000AA;
+}
+
+.shelf-item-relative:hover {
+    border: 2px solid var(--high-6);
+    box-shadow: 3px 3px 10px 2px #000000AA;
+}
+
+.shelf-item-img {
+    object-fit: cover;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.shelf-item-img:hover {
+    filter: grayscale(50%);
+}
+
+/* Shelf Item Functionality */
+.shelf-item-link {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* Shelf Item Content
+ * It's called footer due to an previous version of this concept...
+*/
+.shelf-item-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.shelf-item-footer:last-child {
+    margin-top: auto;
+    margin-bottom: 0.5rem;
+}
+
+.shelf-item-footer div {
+    margin: auto 0.5rem;
+}
+
+/* User shelves. */
+.user-shelves {
+    max-width: 69%;
+    height: 100%;
+    margin: 0;
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* This is TEMPORARY */
+#shelf-primary {
+    border-radius: 1rem;
+    box-shadow: 3px 3px 10px 0px #000000AA;
+}
+
+#shelf-secondary {
+    box-shadow: 3px 3px 10px 0px #000000AA;
+    border-radius: 1rem;
+}
+
+/* Main user game shelf styles. */
+
+#main-list {
+    margin: 3rem auto;
+
+    overflow: hidden;
+
+    flex-wrap: wrap;
+    flex-flow: wrap;
+
+    box-shadow: 3px 3px 10px 0px #000000AA;
+}
