@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <string>
 #include <vector>
+#include <cmath>
 
 #define thisPixel picture[x][y]
 
@@ -24,12 +26,12 @@ public:
 
 void loadButtons();
 void scanImage();
-void findArea(int x, int y);
+void findArea(int x, int y, bool invert);
 void findDamaged();
 void drawBoxes();
 void saveImage();
 
-int total, xmin, xmax, ymin, ymax;  // MUST be global if used
+int maxDeviation = 5;  // MUST be global if used
 int screenx, screeny, maxcolours;   // you must use these
 pixel_class picture[600][600];      // you must use thism
 // Index Key
@@ -72,44 +74,74 @@ void scanImage() {
             if (thisPixel.getexclude()) continue;
             if (thisPixel.getR() > 128 || thisPixel.getG() > 128 || thisPixel.getB() > 128) {
                 circles.push_back(circlePosition(y, y, x, x, 1, 0));
-                findArea(x, y); // Enter recusrive find function.
+                findArea(x, y, 0); // Enter recusrive find function.
             }
         }
     }
 
     findDamaged();
-
-    for (int i = 0; i < circles.size(); ++i) {
-        cout << circles[i].damaged << " " << circles[i].top << " " << circles[i].bottom << " " << circles[i].left << " " << circles[i].right << endl;
-    }
 }
 
-void findArea(int x, int y) {
+void findArea(int x, int y, bool invert) {
     // Base Cases
     if (thisPixel.getexclude()) return;
-    if (thisPixel.getR() <= 128 && thisPixel.getG() <= 128 && thisPixel.getB() <= 128) return;
-
+    if (!invert) {
+        if (thisPixel.getR() <= 128 && thisPixel.getG() <= 128 && thisPixel.getB() <= 128) return;
+        circles.back().count++; // Increase pixel count for nth circle.
+        if      (y < circles.back().top)    circles.back().top    = y;
+        else if (y > circles.back().bottom) circles.back().bottom = y;
+        else if (x < circles.back().left)   circles.back().left   = x;
+        else if (x > circles.back().right)  circles.back().right  = x;
+    }
+    else {
+        if (thisPixel.getR() > 128 || thisPixel.getG() > 128 || thisPixel.getB() > 128) return;
+    }
     thisPixel.setexclude(true);
-    circles.back().count++; // Increase pixel count for nth circle.
-    if      (y < circles.back().top)    circles.back().top    = y;
-    else if (y > circles.back().bottom) circles.back().bottom = y;
-    else if (x < circles.back().left)   circles.back().left   = x;
-    else if (x > circles.back().right)  circles.back().right  = x;
 
-    findArea(x + 1, y    );
-    findArea(x - 1, y    );
-    findArea(x    , y + 1);
-    findArea(x    , y - 1);
+    findArea(x + 1, y    , invert);
+    findArea(x - 1, y    , invert);
+    findArea(x    , y + 1, invert);
+    findArea(x    , y - 1, invert);
 }
 
 void findDamaged() {
-    int maxCount = 0;
-    for (int i = 0; i < circles.size(); ++i) {
-        if (circles[i].count > maxCount) maxCount = circles[i].count;
-    }
+    // So uh... I wanted to do something dumb and try and be a smartass. It kinda worked..? I don't have time to make more images to check
+    // but yeah. c:
+    //
+    // I'd really have liked to find a way to check the edge pixels of the circle against their distance from the centre to determine
+    // whether they are not a circle and thus are damaged, but I couldn't figure out how.
+    // So, I just drew a circle with a maxDeviation distance from the edge and checked each pixel on that circle. I'd really like feedback
+    // on how I could have made this work the otherway.
 
     for (int i = 0; i < circles.size(); ++i) {
-        if (circles[i].count < (0.94 * maxCount)) circles[i].damaged = 1;
+        int width = (circles[i].right - circles[i].left);
+        int height = (circles[i].bottom - circles[i].top);
+        int deviation = abs(width - height), radius;
+
+        if (width > height) radius = height / 2 - maxDeviation;
+        else radius = width / 2 - maxDeviation;
+
+        for (int theta = 0, x, y; theta <= 360; theta += 10) {
+            x = radius * cos(theta) + circles[i].left + width / 2;
+            y = radius * sin(theta) + circles[i].top + height / 2;
+
+            if (thisPixel.getR() <= 128 && thisPixel.getG() <= 128 && thisPixel.getB() <= 128) circles[i].damaged = true;
+        }
+
+        if (circles[i].damaged) continue;
+
+         radius = 15;
+         circles[i].count = 0;
+         for (int theta = 0, x, y; theta <= 360; theta += 10) {
+             x = radius * cos(theta) + circles[i].left + width / 2;
+             y = radius * sin(theta) + circles[i].top + height / 2;
+
+             if (thisPixel.getR() <= 128 && thisPixel.getG() <= 128 && thisPixel.getB() <= 128 && !thisPixel.getexclude()) {
+                 findArea(x, y, 1);
+                 circles[i].count++;
+             }
+         }
+        if (circles[i].count < 4) circles[i].damaged = true;
     }
 }
 
