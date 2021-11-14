@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Sign Up - Game Shelf</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Game Shelf user sign up page.">
+    <meta name="author" content="Niamh Ferns">
+    <meta name="viewport" content="width=device-width, intial-scale=1.0">
+    <meta name="keywords" content="Games, Gaming News, Game Tracker, Game Journal, Game Reviews, Sign Up, Login">
+
+    <link rel="stylesheet" type="text/css" href="styles/global-styles.css">
+    <link rel="stylesheet" type="text/css" href="styles/layouts-styles.css">
+    <link rel="stylesheet" type="text/css" href="styles/carosel-styles.css">
+    <link rel="stylesheet" type="text/css" href="styles/forms.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <!-- Navigation and shit. -->
+        <nav>
+            <a href="index.html" class="main-logo"><img src="..." alt="Game shelf logo." title="home" /></a>
+
+            <!-- Main nav. -->
+            <ul class="main-nav-list">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="up-and-coming.html">Up & Coming</a></li>
+                <li><a href="...">Collections</a></li>
+                <li><a href="userprofile.html">My Shelf</a></li>
+            </ul>
+
+            <!-- The userhub bit. -->
+            <section class="userhub">
+                <a href="login.html">
+                    Login/Sign Up
+                </a>
+                <img src="media/ui/login.png" alt="User profile picture." title="User Hub" class="profile-picture no-user" />
+            </section>
+        </nav>
+    </header>
+
+    <main>
+        <h1 class="signup">Sign Up</h1>
+        <div class="form-wrapper">
+            <form action="loginform.json" method="get">
+                <div>
+                    <lable for="email">Email</lable>
+                    <input type="email" name="email" id="email" placeholder="example@mail.com" required/>
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" placeholder="***********" required/>
+                </div>
+                <div>
+                    <label for="password">Confirm Password</label>
+                    <input type="password" name="confirm-password" id="confirm-password" placeholder="***********" required/>
+                </div>
+                <div>
+                    <input type="checkbox" name="age" id="age" value="age-check" required />
+                    <label for="age">I'm at least 13 years old.</label><br>
+                    <input type="checkbox" name="tos" id="tos" value="tos-check" />
+                    <label for="tos">I agree to the terms of service.</label><br>
+                    <input type="checkbox" name="news-letters" id="news-letters" value="news-check" />
+                    <label for="news-letters">I would like to receive weekly updates.</label>
+                </div>
+                <div>
+                <button type="submit" name="submit" title="Register your new account.">Register</button>
+                <p>Already have an account? <a href="login.html" title="Log in with an existing account.">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

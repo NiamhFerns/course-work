@@ -1,0 +1,10 @@
+[
+  {
+    "name": "sally",
+    "age": 25,
+    "address": {
+    "street": "25 Oaktree Ave.",
+    "city": "Auckland"
+    }
+  }
+]
