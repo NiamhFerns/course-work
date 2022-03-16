@@ -1,0 +1,345 @@
+@charset "UTF-8";
+
+/* Hero areas for game/home pages. */
+.hero-area {
+    position: relative;
+    width: 100vw;
+    height: 92vh;
+    margin: 0 auto;
+    overflow: hidden;
+    box-shadow: 0px 1px 10px 0px #000;
+}
+
+/* Media */
+.hero-area > img {
+    width: 100%;
+    transform: translateY(-3%);
+}
+
+.hero-area > .game-trailer {
+    width: 100%;
+    transform: translateY(-3%);
+    position: relative;
+}
+
+.hero-area iframe {
+    position: absolute;
+    transform: translate(0%, -10%);
+    height: 100vh;
+    width: 100vw;
+}
+
+@media (min-aspect-ratio: 16/9) {
+    .game-trailer iframe {
+        height: 56.25vw;
+    }
+}
+
+/* Game Info */
+.hero-card {
+    max-width: 25rem;
+    height: 80%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10rem;
+    margin: 0;
+    background-color: var(--bg-2);
+    box-shadow: 2px 2px 10px 0px #000;
+    border-radius: 0.5rem;
+    opacity: 0.95;
+}
+
+.hero-card * {
+    opacity: 1;
+}
+
+.hero-card-title {
+    font-size: 2rem;
+    font-weight: 400;
+    margin: 3rem 20%;
+    text-align: center;
+}
+
+.hero-card p, .hero-card > div {
+    margin: 1rem 2rem;
+    text-align: center;
+}
+
+.hero-card > p {
+    margin-top: 2rem;
+}
+
+.hero-card .item-footer {
+    transform: translateY(300%);
+}
+
+.hero-card blockquote {
+    font-style: italic;
+    text-align: center;
+}
+
+.hero-card a {
+    color: var(--high-6);
+    font-weight: 600;
+}
+
+.hero-card .date {
+    margin-top: 1rem;
+}
+
+.hero-card .score {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sec-4)
+}
+
+.item-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hero-card a:hover {
+    color: var(--high-5);
+}
+
+.hero-area .view-button-big {
+    display: block;
+    position: absolute;
+    margin: 0;
+    top: 85%;
+    left: 50%;
+    transform: translateY(-50%);
+    transform: translateX(-50%);
+    width: 13rem;
+    height: 4rem;
+    background-color: var(--pr-2);
+    color: var(--fg-2);
+    font-size: 2rem;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    box-shadow: 3px 3px 5px 2px var(--bg-1);
+    border: 0.1rem solid var(--fg-1);
+    opacity: 0.8;
+}
+
+.hero-area .view-button-big:hover {
+    background-color: var(--sec-3);
+    opacity: 1;
+}
+
+/* My Shelf */
+.user-header {
+    max-width: 75vw;
+    height: 60vh;
+    margin: 0 auto;
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: row;
+}
+
+.user-summary {
+    min-width: 30%;
+    height: 100%;
+    margin: 0 2rem 0 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#user-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30%;
+    border-radius: 1rem;
+    box-shadow: 3px 3px 10px 0px #000000AA;
+}
+
+#user-banner img {
+    width: 5rem;
+    height: 5rem;
+    margin-right: 1rem;
+    border: 0.3rem solid var(--sec-4);
+    border-radius: 1rem;
+}
+
+#user-banner h1 {
+    font-size: 2rem;
+}
+
+#user-stats {
+    margin-top: 1rem;
+    width: 100%;
+    min-height: 40%;
+    flex-grow: 1;
+    border-radius: 1rem;
+    box-shadow: 3px 3px 10px 0px #000000AA;
+}
+
+.user-summary div {
+    width: 100%;
+    margin: 0;
+    background-color: var(--bg-1);
+}
+
+/* News */
+.stories {
+    width: 75vw;
+    height: 61vh;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 1rem;
+}
+
+
+.main-stories {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.side-stories {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.story {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    margin: 0.5rem 0.25rem;
+    overflow: hidden;
+    border: 2px solid var(--bg-3);
+    border-radius: 0.5rem;
+}
+
+.story:hover {
+    border: 2px solid var(--high-6);
+    box-shadow: 2px 2px 10px 1px #000000AA;
+}
+
+.story a {
+    width: 100%;
+}
+
+.story img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.story img:hover {
+    filter: grayscale(80%);
+}
+
+.announcements {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow: scroll;
+    overflow-x: hidden;
+    margin-top: 1rem;
+    background-color: var(--bg-4);
+    box-shadow: 3px 3px 10px 2px #000000AA;
+    border-radius: 0.5rem;
+}
+
+main > .filter-bar {
+    margin-top: 1rem;
+    width: 100%;
+    height: 2rem;
+    background-color: var(--pr-1);
+    border-radius: 0.5rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.filter-bar #search {
+    width: 25rem;
+    margin: 0 1rem;
+    border-radius: 0.5rem;
+}
+
+#send-search {
+    width: 8rem;
+    height: 60%;
+    margin: 0 1rem 0 0;
+}
+
+.announcement {
+    max-height: 15rem;
+    margin: 1rem 0.5rem 0 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: var(--bg-2);
+    border-radius: 0.5rem;
+    box-shadow: 2px 2px 5px 1px #000000AA;
+}
+
+.announcement:last-child {
+    margin-bottom: 0.5rem;
+}
+
+.announcement .content {
+    flex-grow: 1;
+}
+
+.announcement .meta {
+    min-width: 25%;
+    background-color: var(--bg-1);
+    border-radius: 0.5rem;
+    box-shadow: -3px 0px 3px 1px #00000055;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.announcement .content > * {
+    margin-left:1rem;
+    margin-right:1rem;
+}
+
+.announcement .author {
+    color: var(--high-5);
+    font-weight: 600;
+}
+
+.announcement .meta > * {
+    margin-left: 1rem;
+    width: 33%;
+}
+
+.announcement .meta a {
+    height: 100%;
+    border-radius: 0.5rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--high-6);
+
+    font-weight: 600;
+}
+
+.announcement .meta a:hover {
+    background-color: var(--high-5);
+    text-decoration: underline;
+}

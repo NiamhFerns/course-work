@@ -1,0 +1,13 @@
+Info 0    [23:35:12.956] Starting TS Server
+Info 1    [23:35:12.956] Version: 4.4.4
+Info 2    [23:35:12.956] Arguments: /usr/bin/node /home/niamh/.emacs.d/.local/etc/lsp/npm/typescript/bin/tsserver --logFile /home/niamh/Dev/course-work/158256/learning-js/.log/tsserver.log --logVerbosity info --cancellationPipeName /tmp/970d1fa1bdae5be8f0f2ef34f3afc816/tscancellation*
+Info 3    [23:35:12.956] Platform: linux NodeVersion: 16 CaseSensitive: true
+Info 4    [23:35:12.956] ServerMode: undefined syntaxOnly: false hasUnknownServerMode: undefined
+Info 5    [23:35:12.966] Search path: /home/niamh/Dev/course-work/158256/learning-js
+Info 6    [23:35:12.966] For info: /home/niamh/Dev/course-work/158256/learning-js/basic-syntax.js :: No config files found.
+Info 7    [23:35:12.969] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 8    [23:35:13.302] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 1 structureChanged: true structureIsReused:: Not Elapsed: 333.4647589996457ms
+Info 9    [23:35:13.303] Project '/dev/null/inferredProject1*' (Inferred)
+Info 10   [23:35:13.303] 	Files (19)
+
+Info 11   [23:35:13.303] -----------------------------------------------
