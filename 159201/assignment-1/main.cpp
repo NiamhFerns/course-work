@@ -19,13 +19,8 @@ struct Node {  //declaration
 Node *A = NULL, *B = NULL, *Added = NULL;  //declaration
 
 void add_node(Node *&l_pointer, int i, int j, int x) {
-    // Node *next = new Node({i, j, x, l_pointer});
-    // next->row = i;
-    // next->column = j;
-    // next->value = x;
-    // next->next = l_pointer;
-    // l_pointer = next;
-    l_pointer = new Node({i, j, x, l_pointer});
+    Node *next = new Node({i, j, x, l_pointer});
+    l_pointer = next;
 }
 
 int search(Node *l_pointer, int row, int column) {
@@ -115,7 +110,6 @@ void read_matrix(Node *&l_pointer, char *file_name, int & row, int & col){
         getline(input,line);
         stringstream sline(line);
         sline >> row >> col;
-        // cout << "Matrix dimensions " << row << " " << col << endl;
     }
 
     // Read matrix in as a Linked-List.
