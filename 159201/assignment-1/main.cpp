@@ -1,6 +1,6 @@
-//159201 assignment 1 skeleton
-//You need to add your own AddNode and PrintLL functions, as well as an AddMatrices function
-//
+// Niamh Kirsty Ferns - 21007069 - Assignment 1
+// Based on the skeleton code with a few of my own edits, including the required functions for the assignment.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
