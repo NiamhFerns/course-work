@@ -24,8 +24,8 @@ void add_node(Node *&l_pointer, int i, int j, int x) {
 }
 
 int search(Node *l_pointer, int row, int column) {
-    while( l_pointer != NULL ) {
-        if( l_pointer->row == row && l_pointer->column == column) return l_pointer->value;
+    while(l_pointer != NULL) {
+        if(l_pointer->row == row && l_pointer->column == column) return l_pointer->value;
         l_pointer = l_pointer->next;
     }
     return 0;
@@ -78,7 +78,7 @@ void print_ll(Node* l_pointer, int rows, int columns, string name) {
     current = l_pointer;
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
-            if ( current != NULL && current->row == i && current->column == j ) {
+            if (current != NULL && current->row == i && current->column == j) {
                 cout << current->value << " ";
                 current = current->next;
                 continue;
