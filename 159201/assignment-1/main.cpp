@@ -115,7 +115,7 @@ void read_matrix(Node *&l_pointer, char *file_name, int & row, int & col){
         getline(input,line);
         stringstream sline(line);
         sline >> row >> col;
-        cout << "Matrix dimensions " << row << " " << col << endl;
+        // cout << "Matrix dimensions " << row << " " << col << endl;
     }
 
     // Read matrix in as a Linked-List.
