@@ -10,7 +10,7 @@ class Stack {
             T data;
             Stack_Node *next_node;
         };
-        Stack_Node *current, *top;
+        Stack_Node *current, *l_pointer;
 
     public:
         // Empty
@@ -28,7 +28,7 @@ class Stack {
         // These give back a copy of the data rather than a pointer to the node because otherwise we run into memory
         // leak issues with pop(), and Top() would allow the private data to be editted outside of the class.
         T pop();
-        T Top();
+        T top();
 
         bool is_empty();
 
@@ -67,7 +67,8 @@ int main(int argc, char** argv) {
 }
 
 template <class T>
-Stack<T>::Stack() {}
+Stack<T>::Stack() {
+}
 
 template <class T>
 Stack<T>::~Stack() {}
@@ -85,7 +86,7 @@ template <class T>
 T Stack<T>::pop() {}
 
 template <class T>
-T Stack<T>::Top() {}
+T Stack<T>::top() {}
 
 template <class T>
 bool Stack<T>::is_empty() {}
