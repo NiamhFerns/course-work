@@ -51,32 +51,40 @@ class Stack {
 };
 
 // For this example we will assume it is an int. This can be easily changed to include floats and other types.
-void run_operation(char c, Stack<int> & s);
+void run_operation(char c, Stack<int> & s, bool & invalid);
 
 int main(int argc, char** argv) {
 
     Stack<int> expression;
     if (argc == 1) {
-        std::cout << "Please provide a file argument..." << std::endl;
+        std::cout << "Please provide a file as input..." << std::endl;
         exit(0);
     }
 
     std::ifstream file;
     file.open(argv[1]);
     if (!file.good()) {
-        std::cout << "Unfortunately, your file failed to open." << std::endl;
+        std::cout << "An error occured while opening the specified file." << std::endl;
         exit(0);
     }
 
     std::string s;
-    while(!file.eof()) {
+    bool status = 0;
+    while(!file.eof() == !status) {
         getline(file, s);
         if (isdigit(s[0])) {
+            std::cout << "Reading number... " << s << std::endl;
             expression.push(stoi(s));
             continue;
         }
-        run_operation(s[0], expression);
+        if (s[0] == '+' || s[0] == '-' || s[0] == '*' || s[0] == '/') {
+            std::cout << "Reading operator... " << s << std::endl;
+            run_operation(s[0], expression, status);
+        }
     }
+
+    if (expression.length() == 1) std::cout << "Your result is: " << expression.top() << std::endl;
+    else std::cout << "This is an invalid expression. Please try again." << std::endl;
     return 0;
 }
 
@@ -150,4 +158,27 @@ int Stack<T>::length() {
     return len;
 }
 
-void run_operation(char c, Stack<int> & s) { return; }
+void run_operation(char c, Stack<int> & s, bool & invalid) {
+    int n1, n2;
+    n1 = s.pop();
+    if (s.is_empty()) {
+        return;
+    }
+    n2 = s.pop();
+    switch (c) {
+        case '+':
+            s.push(n1 + n2);
+            break;
+        case '-':
+            s.push(n1 - n2);
+            break;
+        case '*':
+            s.push(n1 * n2);
+            break;
+        case '/':
+            s.push(n1 / n2);
+            break;
+        default:
+            break;
+    }
+}
