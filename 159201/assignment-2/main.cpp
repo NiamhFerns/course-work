@@ -110,16 +110,7 @@ Stack<T>::Stack(T items[], int n) {
 }
 
 template <class T>
-Stack<T>::~Stack() {
-    // if (l_pointer == nullptr) return;
-
-    // Stack_Node * to_delete;
-    // while (l_pointer) {
-    //     to_delete = l_pointer;
-    //     if(l_pointer->next) l_pointer = l_pointer->next;
-    //     delete to_delete;
-    // }
-}
+Stack<T>::~Stack() {}
 
 template <class T>
 void Stack<T>::push(T data) {
@@ -132,6 +123,8 @@ template <class T>
 T Stack<T>::pop() {
     // This guard statement is gross... I wanted to use std::optional but not sure if this is marked in c++ 11 or 17.
     // empty return doesn't work for a templated function with an explicit return type.
+    // Making this function pass by reference would eliminate this issue but wouldn't be as intuitive to use in my opinion.
+    // It would also neccesitate having the function defined twice with different signatures.
     if (is_empty()) return 0;
 
     T data = l_pointer->data;
