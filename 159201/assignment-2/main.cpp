@@ -84,6 +84,10 @@ int main(int argc, char** argv) {
             std::cout << "reading operator " << s << std::endl;
             run_operation(s[0], expression, incorrect_input);
         }
+        else {
+            std::cout << s[0] << " is not a valid operator or number." << std::endl;
+            return 0;
+        }
     }
 
     // Output our result or the relevant error message.
