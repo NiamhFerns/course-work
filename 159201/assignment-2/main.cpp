@@ -1,4 +1,4 @@
-// Niamh Kirsty Ferns - Assignment 2 - Reverse Polish Notation Calculator
+// Niamh Kirsty Ferns - 21007069 - Assignment 2 - Reverse Polish Notation Calculator
 //
 // NOTE:
 // I went way over the top with unnecesary stuff that wasn't needed for this assignment in particular. This was
