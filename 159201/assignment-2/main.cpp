@@ -9,6 +9,7 @@
 
 #include <cstddef>
 #include <cstdlib>
+#include <exception>
 #include <iostream>
 #include <fstream>
 #include <iterator>
@@ -42,20 +43,21 @@ class Stack {
         // leak issues with pop(), and Top() would allow the private data to be editted outside of the class.
         T pop();
         T top();
-
         bool is_empty();
-
-        // NOTE: Again, this is unneeded for this assignment but is here because this is supposed to be an
-        //       implementation of a stack, not just the functionality for this assignment.
         int length();
 };
 
-// For this example we will assume it is an int. This can be easily changed to include floats and other types.
+// For this assignment we will assume it is an int. This can be easily changed to include floats and other types as well.
+// We use invalid to determine whether there are too many operands.
 void run_operation(char c, Stack<int> & s, bool & invalid);
 
 int main(int argc, char** argv) {
 
+    // Our expression stack and a variable to monitor whether whether something goes wrong mid operation.
     Stack<int> expression;
+    bool incorrect_input = 0;
+
+    // Check for file name and open our file.
     if (argc == 1) {
         std::cout << "Please provide a file as input..." << std::endl;
         exit(0);
@@ -68,23 +70,25 @@ int main(int argc, char** argv) {
         exit(0);
     }
 
+    // Loop through the file, run operation if relevant or push number to the stack.
     std::string s;
-    bool status = 0;
-    while(!file.eof() == !status) {
+    while(!file.eof() == !incorrect_input) {
         getline(file, s);
         if (isdigit(s[0])) {
-            std::cout << "Reading number... " << s << std::endl;
+            std::cout << "reading number " << s << std::endl;
+            // stoi() assumes integer input from user.
             expression.push(stoi(s));
             continue;
         }
         if (s[0] == '+' || s[0] == '-' || s[0] == '*' || s[0] == '/') {
-            std::cout << "Reading operator... " << s << std::endl;
-            run_operation(s[0], expression, status);
+            std::cout << "reading operator " << s << std::endl;
+            run_operation(s[0], expression, incorrect_input);
         }
     }
 
-    if (expression.length() == 1) std::cout << "Your result is: " << expression.top() << std::endl;
-    else std::cout << "This is an invalid expression. Please try again." << std::endl;
+    // Output our result or the relevant error message.
+    if (expression.length() == 1) std::cout << "The result is " << expression.top() << std::endl;
+    else std::cout << "too many " << (expression.length() > 1 ? "numbers" : "operators") << std::endl;
     return 0;
 }
 
@@ -155,21 +159,22 @@ void run_operation(char c, Stack<int> & s, bool & invalid) {
     int n1, n2;
     n1 = s.pop();
     if (s.is_empty()) {
+        invalid = 1;
         return;
     }
     n2 = s.pop();
     switch (c) {
         case '+':
-            s.push(n1 + n2);
+            s.push(n2 + n1);
             break;
         case '-':
-            s.push(n1 - n2);
+            s.push(n2 - n1);
             break;
         case '*':
-            s.push(n1 * n2);
+            s.push(n2 * n1);
             break;
         case '/':
-            s.push(n1 / n2);
+            s.push(n2 / n1);
             break;
         default:
             break;
