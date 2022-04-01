@@ -1,0 +1,4 @@
+output port 1: 39 packets
+output port 2: 21 packets
+output port 3: 44 packets
+output port 4: 7 packets

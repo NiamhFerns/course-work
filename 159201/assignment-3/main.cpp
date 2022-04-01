@@ -1,12 +1,20 @@
+// Niamh Kirsty Ferns - 21007069 - Router Traffic Simulator
+// This was completed with a mix of the starter code from stream that I heavily editted as well as my own code.
+// I changed a lot of the variable names and recommented everything just so that the program is clearer and easier
+// to read.
+//
+// I removed and refactored a significant amount of the starter code and removed the unneeded fluff.
+
 #include <iostream>
 #include <ostream>
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
-// #include <locale>
 
+// This is the delay for the output clock.
 #define TIME_DELAY 3
+// This is the maximum amount of ports our simulation can handle.
 #define MAX_PORTS 128
 
 template<class T>
@@ -34,7 +42,6 @@ class Queue {
         bool is_empty();
         int length();
         void print();
-
 };
 
 // Resets all queues to null.
@@ -44,7 +51,6 @@ void reset_input_queues();
 void init_simulation();
 
 // Monitor packet traffic in simulation.
-int OutQueues_current[MAX_PORTS];
 int Congestion_Size[MAX_PORTS];
 
 // We use pointers so that we can create queues as we need them.
@@ -52,13 +58,8 @@ Queue<int> * Input_Queues[MAX_PORTS];
 Queue<int> * Output_Queues[MAX_PORTS];
 
 int main(int argc, char **argv) {
-    /* NOTE: THE GOAL --
-     * Read our file and get our input queues...
-     *
-     *///
-
-    int current_port=0, total_ports=0, packet_content=0, destination_port = 0;
-    std::string expression, geninput, token;
+    int current_port = 0, total_ports = 0, packet_content = 0, destination_port = 0;
+    std::string expression, token;
     std::ifstream input_file;
     reset_input_queues();
 
@@ -67,9 +68,9 @@ int main(int argc, char **argv) {
     // ---------------- //
 
     // Open our file for IO.
-    if(argc!=2) { std::cout<< "Type a file name. " << std::endl << argv[1] << std::endl; exit(0); }
+    if(argc != 2) { std::cout<< "Type a file name. " << std::endl << argv[1] << std::endl; exit(0); }
     input_file.open(argv[1]);
-    if(input_file.is_open()==false) { std::cout << "Could not read file: " << std::endl << argv[1] << std::endl; exit(0); }
+    if(input_file.is_open() == false) { std::cout << "Could not read file: " << std::endl << argv[1] << std::endl; exit(0); }
 
     // Read contents of file into memory.
     while(!input_file.eof()){
@@ -102,10 +103,6 @@ int main(int argc, char **argv) {
             if (packet_content <= 0 || packet_content > total_ports || current_port > total_ports - 1) { std::cout << "ERROR in the format of the text file" << std::endl; exit(0); }
             Input_Queues[current_port]->join(packet_content);
         }
-        std::cout << std::endl;
-
-        // NOTE: Debug statement, comment for final version.
-        // std::cout<< "Input packets at input queue for port "<< current_port << " = " << Input_Queues[current_port]->length() << std::endl;
 
         ++current_port;
     }
@@ -125,9 +122,18 @@ int main(int argc, char **argv) {
             destination_port = Input_Queues[current_port]->leave();
             Output_Queues[destination_port - 1]->join(destination_port);
         }
-        current_port = (current_port + 1) % total_ports;
-        clock++;
 
+
+        // We have a delay to represent packets leaving the output queues every N cycles.
+        // Let t = our delay, p = the number of ports. Then, N = t * p.
+        if(clock % (TIME_DELAY * total_ports) == 0 && clock != 0) {
+            // Send packets from output queues.
+            for(int i = 0; i < total_ports; ++i){
+                Output_Queues[i]->leave();
+            }
+        }
+
+        // Calculate the current and max conjestion level AFTER packets have left the output queues0
         current_conjestion = 0;
         for (int i = 0; i < total_ports; ++i) { current_conjestion += Output_Queues[i]->length(); }
 
@@ -137,21 +143,11 @@ int main(int argc, char **argv) {
                 max_conjestion = current_conjestion;
             }
         }
-
-        // We have a delay to represent packets leaving the output queues every N cycles.
-        // Let t = our delay, p = the number of ports. Then, N = t * p.
-        if(clock % (TIME_DELAY * total_ports) == 0 && clock != 0) {
-            // NOTE: Debug statement, comment for final version
-            // std::cout << "Packets can leave the output queues at " << clock << " microsec " << std::endl;
-
-            // Send packets from output queues.
-            for(int i = 0; i < total_ports; ++i){
-                Output_Queues[i]->leave();
-            }
-        }
+        current_port = (current_port + 1) % total_ports;
+        clock++;
     } while(current_conjestion > 0);
 
-    //FINAL PRINTOUT, remember to comment out all the other debugging printouts above
+    // Final print out.
     for(int i = 0; i < total_ports; ++i){
         std::cout << "output port " << i + 1 << ": " << Congestion_Size[i] << " packets" << std::endl;
     }
@@ -168,7 +164,6 @@ void reset_input_queues() {
 
 void init_simulation(){
   for(int i = 0; i < MAX_PORTS; ++i){
-    OutQueues_current[i] = 0;
     Congestion_Size[i] = 0;
   }
 }

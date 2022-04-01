@@ -1,0 +1,3 @@
+output port 1: 106 packets
+output port 2: 106 packets
+output port 3: 106 packets
