@@ -1,39 +1,11 @@
 package com.company;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main {
-    static final String[] majorsData = {
-            "Computer Science;CS",
-            "Information Technology;IT",
-            "Information Systems;IS",
-            "Software Engineering;SE",
-            "Data Science;DS"
-    };
-
-    static final String[] courseData = {
-            "158100;Information Technology Principles;IT,IS;70;30;0",
-            "158120;Web-based IT Fundamentals;IT,IS;60;40;0",
-            "159101;Applied Programming;IT,IS,CS,DS,SE;50;50;0",
-            "159201;Algorithms and Data Structures;CS,DS,SE,IS;40;20;40",
-            "159234;Object-Oriented Programming;CS,SE;50;10;40",
-            "158337;Database Development;IT,SE,DS;60;0;40",
-            "158345;Professionalism in the Information Sciences;IT,IS,CS,DS,SE;100;0;0",
-    };
-
-    static final String[] lecturersData = {
-            "1562347;Thomas;Becker;Auckland",
-            "21007069;Niamh;Ferns;Auckland",
-            "5664789;Steven;Hobbs;Auckland",
-            "3658947;Andrew;Jackson;Auckland",
-            "6332698;Jonathon;Wood;Auckland",
-            "12345678;Mickey;Mouse;Auckland",
-            "1105236;Amy;Sheffield;PN",
-            "1235894;Victoria;Jensen;PN",
-            "7225669;James;Lee;PN",
-            "1328991;Colin;Delmont;PN"
-    };
-
     protected static ArrayList<Major> majors;
     protected static ArrayList<Course> courses;
     protected static ArrayList<Lecturer> lecturers;
@@ -50,22 +22,30 @@ public class Main {
 
     // Read in the values of our semi-colon separated strings into the relevant ArrayLists.
     private static void readINData() {
-        // Majors
-        majors = new ArrayList<Major>();
-        for (String s : majorsData) {
-            majors.add(new Major(s));
-        }
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("school_data.txt"));
 
-        // Lecturers
-        lecturers = new ArrayList<Lecturer>();
-        for (String s : lecturersData) {
-            lecturers.add(new Lecturer(s));
-        }
+            String expression = "";
+            majors = new ArrayList<Major>();
+            lecturers = new ArrayList<Lecturer>();
+            courses = new ArrayList<Course>();
 
-        // Courses
-        courses = new ArrayList<Course>();
-        for (String s : courseData) {
-            courses.add(new Course(s, lecturers.toArray(new Lecturer[lecturers.size()])));
+            while((expression = br.readLine()) != null) {
+                switch (expression.charAt(0)) {
+                    case 'M':
+                        majors.add(new Major(expression.substring(2)));
+                        break;
+                    case 'L':
+                        lecturers.add(new Lecturer(expression.substring(2)));
+                        break;
+                    case 'C':
+                        courses.add(new Course(expression.substring(2), lecturers.toArray(new Lecturer[lecturers.size()])));
+                        break;
+                }
+            }
+        }
+        catch(IOException e) {
+            System.out.println("Please make sure the \"school_data.txt\" file is present in your program directory.");
         }
     }
 
