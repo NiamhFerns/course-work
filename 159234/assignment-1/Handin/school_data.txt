@@ -1,0 +1,22 @@
+M;Computer Science;CS
+M;Information Technology;IT
+M;Information Systems;IS
+M;Software Engineering;SE
+M;Data Science;DS
+L;1562347;Thomas;Becker;Auckland
+L;21007069;Niamh;Ferns;Auckland
+L;5664789;Steven;Hobbs;Auckland
+L;3658947;Andrew;Jackson;Auckland
+L;6332698;Jonathon;Wood;Auckland
+L;12345678;Mickey;Mouse;Auckland
+L;1105236;Amy;Sheffield;PN
+L;1235894;Victoria;Jensen;PN
+L;7225669;James;Lee;PN
+L;1328991;Colin;Delmont;PN
+C;158100;Information Technology Principles;IT,IS;70;30;0
+C;158120;Web-based IT Fundamentals;IT,IS;60;40;0
+C;159101;Applied Programming;IT,IS,CS,DS,SE;50;50;0
+C;159201;Algorithms and Data Structures;CS,DS,SE,IS;40;20;40
+C;159234;Object-Oriented Programming;CS,SE;50;10;40
+C;158337;Database Development;IT,SE,DS;60;0;40
+C;158345;Professionalism in the Information Sciences;IT,IS,CS,DS,SE;100;0;0

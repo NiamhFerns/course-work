@@ -1,5 +1,3 @@
-package com.company;
-
 public class Modes {
     private Lecturer[] lecturers = new Lecturer[3];
 

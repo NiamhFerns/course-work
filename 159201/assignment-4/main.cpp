@@ -98,7 +98,6 @@ bool List<T>::remove() {
     //                    delete this one ^
     current->next = current->next->next;
     --size;
-    delete to_remove;
     return true;
 }
 
@@ -109,7 +108,6 @@ bool List<T>::remove_front() {
     if (current == l_pointer) current = l_pointer->next;
     l_pointer = l_pointer->next;
     --size;
-    delete to_remove;
     return true;
 }
 
