@@ -43,18 +43,16 @@ struct Tree
     Tree * left, * right;
 };
 
-void print_pre();           // Depth first: pre-order printing
-void print_in();            // Depth first: in-order printing
-void print_post();          // Depth first: post-order printing.
-void print_breadth_left();  // Breadth first: left to right printing;
-void print_breadth_right(); // Breadth first: right to left printing;
+void print_in(Tree * T);            // Depth first: in-order printing
+void print_post(Tree * T);          // Depth first: post-order printing.
 
+bool is_number(const std::string & s);
 
 int main(int argc, char**  argv)
 {
     if (argc != 2) { std::cout << "Please pass in 1 and only 1 file name." << std::endl; exit(0); }
-    Stack<Tree> s;
-    Tree expression, left, right;
+    Stack<Tree *> s;
+    Tree * expression, * left, * right;
 
     std::ifstream input;
     input.open(argv[1]);
@@ -64,13 +62,29 @@ int main(int argc, char**  argv)
     std::string e;
     while(getline(input, e))
     {
-        if (std::isdigit(std::stoi(e)))
+        e = e.substr(0, e.size() - 1); // Trimming off the end char.
+        if (is_number(e))
+        {
+            s.push(new Tree{e, nullptr, nullptr});
+            // std::cout << "Operand: " << s.top()->data << " E = " << e << std::endl;
+            continue;
+        }
         if (e == "+" || e == "-" || e == "*" || e == "/")
         {
-
+            right = s.pop();
+            left = s.pop();
+            s.push(new Tree{e, left, right});
+            // std::cout << "Operator: " << s.top()->data << " E = " << e << std::endl;
         }
-        s.push({e, nullptr, nullptr});
+        expression = s.top();
     }
+
+    print_in(expression);
+    std::cout << std::endl;
+    print_post(expression);
+    std::cout << std::endl;
+
+    return 0;
 }
 
 template <class T>
@@ -142,4 +156,29 @@ template <class T>
 int Stack<T>::length()
 {
     return len;
+}
+
+bool is_number(const std::string & s)
+{
+    if (s.empty()) return false;
+    for (char c : s) { if (!std::isdigit(c)) return false; }
+    return true;
+}
+
+void print_in(Tree * T)
+{
+    if(!T) return;
+    if(!is_number(T->data)) std::cout << "(";
+    print_in(T->left);
+    std::cout << T->data;
+    print_in(T->right);
+    if(!is_number(T->data)) std::cout << ")";
+}
+
+void print_post(Tree * T)
+{
+    if(!T) return;
+    print_post(T->left);
+    print_post(T->right);
+    std::cout << T->data;
 }
