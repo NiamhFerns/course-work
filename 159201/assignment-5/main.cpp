@@ -1,4 +1,3 @@
-#include <cctype>
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -60,9 +59,8 @@ int main(int argc, char**  argv)
 
     int i = 0;
     std::string e;
-    while(getline(input, e))
+    while(input >> e)
     {
-        e = e.substr(0, e.size() - 1); // Trimming off the end char.
         if (is_number(e))
         {
             s.push(new Tree{e, nullptr, nullptr});
@@ -76,11 +74,13 @@ int main(int argc, char**  argv)
             s.push(new Tree{e, left, right});
             // std::cout << "Operator: " << s.top()->data << " E = " << e << std::endl;
         }
-        expression = s.top();
+        if(!s.is_empty()) expression = s.top();
     }
 
+    std::cout << "In-fix:\n";
     print_in(expression);
     std::cout << std::endl;
+    std::cout << "Post-fix:\n";
     print_post(expression);
     std::cout << std::endl;
 
@@ -180,5 +180,5 @@ void print_post(Tree * T)
     if(!T) return;
     print_post(T->left);
     print_post(T->right);
-    std::cout << T->data;
+    std::cout << T->data << " ";
 }
