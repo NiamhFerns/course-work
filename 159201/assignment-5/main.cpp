@@ -1,8 +1,11 @@
+// Niamh Kirsty Ferns - Assignment 5 - 21007069
+
 #include <iostream>
 #include <cstdlib>
 #include <string>
 #include <fstream>
 
+// This stack class is copypasted from my second assignment. It is all my code.
 template<class T>
 class Stack
 {
@@ -18,9 +21,6 @@ class Stack
         // Empty Constructor
         Stack();
 
-        // NOTE: These functions aren't required for the assignment, but they're here as the idea behind this is
-        //       class is to provide functionality you'd want from a stack class, not just the functionality
-        //       needed in this assingment.
         Stack(T item); // Add a single item.
         Stack(T items[], int n); // Add multiple items via an array.
 
@@ -36,22 +36,38 @@ class Stack
         int length();
 };
 
-struct Tree
+template <class T>
+class Tree
 {
-    std::string data;
-    Tree * left, * right;
+    private:
+        T data;
+        Tree<T> * left, * right;
+
+    public:
+        // Constructors
+        Tree(T data) : data(data), left(nullptr), right(nullptr) {}
+        Tree(T data, Tree<T> * left, Tree<T> * right) : data(data), left(left), right(right) {}
+
+        // Getters and Setters
+        void set_data(T data);
+        void set_left(Tree<T> * ptr);
+        void set_right(Tree<T> * ptr);
+
+        T get_contents();
+        Tree<T> * get_left();
+        Tree<T> * get_right();
 };
 
-void print_in(Tree * T);            // Depth first: in-order printing
-void print_post(Tree * T);          // Depth first: post-order printing.
 
 bool is_number(const std::string & s);
+void print_in(Tree<std::string> * tree);
+void print_post(Tree<std::string> * tree);
 
 int main(int argc, char**  argv)
 {
     if (argc != 2) { std::cout << "Please pass in 1 and only 1 file name." << std::endl; exit(0); }
-    Stack<Tree *> s;
-    Tree * expression, * left, * right;
+    Stack<Tree<std::string> *> s;
+    Tree<std::string> * expression, * left, * right;
 
     std::ifstream input;
     input.open(argv[1]);
@@ -59,20 +75,24 @@ int main(int argc, char**  argv)
 
     int i = 0;
     std::string e;
+
+    // while(std::getline(input, e)) - This is how I wanted to do it originally but there is a very strange bug I ran into that couldn't fix.
+    // on linux it seems that it reads each line in as a string with a random character on the end (it's not a new line character and it doesn't show up when I print).
+    // this character doesn't get read in when I run the code on the massey automarker. This means that if I trim the string, it fails all the auto-marker tests with no output,
+    // but if I don't trim the string, I get get no output on my end.
     while(input >> e)
     {
+        // e = e.substring(0, e.size() - 1);
         if (is_number(e))
         {
-            s.push(new Tree{e, nullptr, nullptr});
-            // std::cout << "Operand: " << s.top()->data << " E = " << e << std::endl;
+            s.push(new Tree<std::string>(e));
             continue;
         }
         if (e == "+" || e == "-" || e == "*" || e == "/")
         {
             right = s.pop();
             left = s.pop();
-            s.push(new Tree{e, left, right});
-            // std::cout << "Operator: " << s.top()->data << " E = " << e << std::endl;
+            s.push(new Tree<std::string>(e, left, right));
         }
         if(!s.is_empty()) expression = s.top();
     }
@@ -80,6 +100,7 @@ int main(int argc, char**  argv)
     std::cout << "In-fix:\n";
     print_in(expression);
     std::cout << std::endl;
+
     std::cout << "Post-fix:\n";
     print_post(expression);
     std::cout << std::endl;
@@ -125,10 +146,6 @@ void Stack<T>::push(T data)
 template <class T>
 T Stack<T>::pop()
 {
-    // This guard statement is gross... I wanted to use std::optional but not sure if this is marked in c++ 11 or 17.
-    // empty return doesn't work for a templated function with an explicit return type.
-    // Making this function pass by reference would eliminate this issue but wouldn't be as intuitive to use in my opinion.
-    // It would also neccesitate having the function defined twice with different signatures.
     if (is_empty()) return 0;
 
     T data = l_pointer->data;
@@ -158,6 +175,24 @@ int Stack<T>::length()
     return len;
 }
 
+template <class T>
+void Tree<T>::set_data(T data) { this->data = data; }
+
+template <class T>
+void Tree<T>::set_left(Tree<T> * ptr) { left = ptr; }
+
+template <class T>
+void Tree<T>::set_right(Tree<T> * ptr) { left = ptr; }
+
+template <class T>
+T Tree<T>::get_contents() { return data; }
+
+template <class T>
+Tree<T> * Tree<T>::get_left() { return left; }
+
+template <class T>
+Tree<T> * Tree<T>::get_right() { return right; }
+
 bool is_number(const std::string & s)
 {
     if (s.empty()) return false;
@@ -165,20 +200,20 @@ bool is_number(const std::string & s)
     return true;
 }
 
-void print_in(Tree * T)
+void print_in(Tree<std::string> * tree)
 {
-    if(!T) return;
-    if(!is_number(T->data)) std::cout << "(";
-    print_in(T->left);
-    std::cout << T->data;
-    print_in(T->right);
-    if(!is_number(T->data)) std::cout << ")";
+    if(!tree) return;
+    if(!is_number(tree->get_contents())) std::cout << "(";
+    print_in(tree->get_left());
+    std::cout << tree->get_contents();
+    print_in(tree->get_right());
+    if(!is_number(tree->get_contents())) std::cout << ")";
 }
 
-void print_post(Tree * T)
+void print_post(Tree<std::string> * tree)
 {
-    if(!T) return;
-    print_post(T->left);
-    print_post(T->right);
-    std::cout << T->data << " ";
+    if(!tree) return;
+    print_post(tree->get_left());
+    print_post(tree->get_right());
+    std::cout << tree->get_contents() << " ";
 }
