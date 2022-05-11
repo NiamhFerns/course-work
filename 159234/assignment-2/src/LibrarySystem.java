@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class LibrarySystem implements LibraryOperations {
 
@@ -14,10 +15,8 @@ public class LibrarySystem implements LibraryOperations {
 
         LibraryHandler e = new LibraryHandler();
 
-        // This functions as our "update" loop and will run a function then return based on the library state.
-        while(e.getState() != LibraryHandler.States.QUIT) {
-            e.nextAction(MasseyLibrary);
-        }
+        // This acts as the entry into our main menu. This system functions as a set of menus controlled by state.
+        e.action(MasseyLibrary);
     }
 
     LibrarySystem(String records) {
@@ -29,13 +28,13 @@ public class LibrarySystem implements LibraryOperations {
                 switch(data[0]) {
                     // This is all gross. I should not be allowed to code.
                     case "Movie":
-                        Records.add(new Movie(Integer.parseInt(data[1]), data[2], data[4], Integer.parseInt(data[3]), 5.0));
+                        Records.add(new Movie(Integer.parseInt(data[1]), data[2], data[4], Integer.parseInt(data[3])));
                         break;
                     case "Book":
-                        Records.add(new Book(Integer.parseInt(data[1]), data[2], data[4], Integer.parseInt(data[5]), Integer.parseInt(data[3]), 5.0));
+                        Records.add(new Book(Integer.parseInt(data[1]), data[2], data[4], Integer.parseInt(data[5]), Integer.parseInt(data[3])));
                         break;
                     case "Journal":
-                        Records.add(new Journal(Integer.parseInt(data[1]), data[2], Integer.parseInt(data[4]), Integer.parseInt(data[5]), Integer.parseInt(data[3]), 5.0));
+                        Records.add(new Journal(Integer.parseInt(data[1]), data[2], Integer.parseInt(data[4]), Integer.parseInt(data[5]), Integer.parseInt(data[3])));
                         break;
                     default:
                         break;
@@ -68,7 +67,7 @@ public class LibrarySystem implements LibraryOperations {
     public Record search(String phrase) {
         // We filter through each element in the Records array and return either the first one or null if the filter ends.
         return Records.stream()
-                .filter(r -> r.getTitle().contains(phrase))
+                .filter(r -> r.getTitle().toLowerCase().contains(phrase.toLowerCase()))
                 .findFirst()
                 .orElse(null);
     }

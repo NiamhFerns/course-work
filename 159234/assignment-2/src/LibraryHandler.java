@@ -5,60 +5,90 @@ public class LibraryHandler {
         OPEN,
         CLOSED,
         ON_HOLD,
-        ERROR,
         QUIT
     }
-    private States currentState = States.QUIT;
-    public States getState() { return currentState; }
+    private States currentState;
 
-    public void nextAction(LibrarySystem system) {
+    public final void action(LibrarySystem system) {
+        Scanner sc = new Scanner(System.in);
+        while (currentState != States.QUIT) {
             currentState = States.ON_HOLD;
-
-            Scanner sc = new Scanner(System.in);
+            System.out.println("\nEnter 'q' to quit,\n's' to sort and display\n'i' to search by ID\nanything else to search by phrase");
             String userIn = sc.next();
 
             currentState = States.CLOSED;
-            Record r = null;
-            switch(userIn) {
+            Record record;
+            switch (userIn) {
+                case "q":
+                    currentState = States.QUIT;
+                    return;
+
                 case "s":
                     system.sortRecords();
                     break;
 
                 case "i":
-                    r = system.search(Integer.parseInt(userIn));
-                    if(r == null) { System.out.println("Item with that ID could not be found."); break; }
+                    System.out.println("Please enter in an ID to search for.");
+                    userIn = sc.next();
+                    record = system.search(Integer.parseInt(userIn));
+                    if (record == null) {
+                        System.out.println("Item with that ID could not be found.");
+                        break;
+                    }
 
-                    r.shortPrint();
+                    record.shortPrint();
                     System.out.println("Enter s to select or anything else to continue.");
                     userIn = sc.next();
-                    if(userIn.equals("s")) nextAction(r);
+                    if (userIn.equals("s")) action(record);
 
                     break;
-
-                case "q":
-                    currentState = States.QUIT;
-                    return;
 
                 default:
-                    r = system.search(userIn);
-                    if(r == null) { System.out.println("Item with that phrase could not be found."); break; }
+                    record = system.search(userIn);
+                    if (record == null) {
+                        System.out.println("Item with that phrase could not be found.");
+                        break;
+                    }
 
-                    r.shortPrint();
+                    record.shortPrint();
                     System.out.println("Enter s to select or anything else to continue.");
                     userIn = sc.next();
-                    if(userIn.equals("s")) nextAction(r);
-
-                    break;
+                    if (userIn.equals("s")) action(record);
             }
-
-            currentState = States.OPEN;
+        }
+        sc.close();
     }
-    public void nextAction(Record record) {
-        record.fullPrint();
+    public final void action(Record record) {
+        Scanner sc = new Scanner(System.in);
+        while(currentState != States.QUIT) {
+            record.fullPrint();
+            currentState = States.ON_HOLD;
 
+            System.out.println("Enter '" + (record.getStatus() ? "'b'" : "'r'") + "to borrow the item, 'a' to rate the item, or anything else to return.");
+            String userIn = sc.next();
+
+            currentState = States.CLOSED;
+            switch (userIn) {
+                case "r":
+                    // This is dumb... why would you change the key here. No...
+                    if (record.getStatus()) break;
+                case "b":
+                    record.borrow();
+                    break;
+                case "a":
+                    record.rate();
+                    break;
+
+                default:
+                    currentState = States.QUIT;
+
+            }
+        }
+        // sc.close(); if I close the scanner here it crashes...
+        currentState = States.ON_HOLD;
     }
 
     public LibraryHandler() {
-
+        currentState = States.OPEN;
     }
 }
