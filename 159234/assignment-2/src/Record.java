@@ -6,8 +6,20 @@ public abstract class Record {
     protected String title;
     protected ArrayList<Double> reviews;
 
-    protected final void shortPrint() {
-        System.out.println(ID + ", " + this.getClass().getName() + ", " + title);
+    public String getTitle() { return title; }
+    public int getID() { return ID; }
+
+    public final void shortPrint() {
+        System.out.println("ID: " + ID + " Type: " + this.getClass().getName() + " Title: " + title);
+    }
+    public final void longPrint() {
+        double averageRating = reviews.stream().reduce(0.0, Double::sum) / reviews.size();
+
+        System.out.println("Average rating: " + averageRating + " Number of reviewers: " + reviews.size() + " ID: " + ID + " Type: " + this.getClass().getName() + " Title: " + title);
+    }
+
+    public final void fullPrint() {
+
     }
 
     Record() {
