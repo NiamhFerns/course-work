@@ -17,7 +17,7 @@ public class Book extends Record {
     public void fullPrint() {
         System.out.println("Type: " + this.getClass().getName() + "\nTitle: " + title + "\nYear: " + year);
         System.out.println("Average rating: " + getReviewAverage() + "\nNumber of Reviewers: " + reviews.size());
-        System.out.println("Status: " + (available ? "available" : "on loan"));
+        System.out.println("Status: " + (available ? "available" : "on loan\nDue date: " + due));
         System.out.println("Author: " + author + "\nNumber of pages: " + pages);
         System.out.println("Max number of days for borrowing: " + maxBorrowTime);
     }

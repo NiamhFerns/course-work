@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LibraryHandler {
@@ -44,16 +45,24 @@ public class LibraryHandler {
                     break;
 
                 default:
-                    record = system.search(userIn);
-                    if (record == null) {
+                    System.out.println("Please enter in a phrase to search for.");
+                    userIn = sc.next();
+                    ArrayList<Record> options = system.search(userIn);
+                    if (options.isEmpty()) {
                         System.out.println("Item with that phrase could not be found.");
                         break;
                     }
 
-                    record.shortPrint();
-                    System.out.println("Enter s to select or anything else to continue.");
+                    for (int i = 0; i < options.size(); ++i) {
+                        System.out.println("* " + (i + 1) + ":" );
+                        options.get(i).shortPrint();
+                        System.out.println();
+                    }
+
+                    System.out.println("Enter the item number to select the item, or enter any other key to continue searching");
                     userIn = sc.next();
-                    if (userIn.equals("s")) action(record);
+
+                    if (isValidOption(userIn, options.size())) action(options.get(Integer.parseInt(userIn) - 1));
             }
         }
         sc.close();
@@ -61,16 +70,18 @@ public class LibraryHandler {
     public final void action(Record record) {
         Scanner sc = new Scanner(System.in);
         while(currentState != States.QUIT) {
+            System.out.println("\nSelected item is:");
             record.fullPrint();
             currentState = States.ON_HOLD;
 
-            System.out.println("Enter '" + (record.getStatus() ? "'b'" : "'r'") + "to borrow the item, 'a' to rate the item, or anything else to return.");
+            System.out.println("\nEnter " + (record.getStatus() ? "'b' to borrow" : "'r' to return") + " the item, 'a' to rate the item, or anything else to return.");
             String userIn = sc.next();
 
             currentState = States.CLOSED;
             switch (userIn) {
                 case "r":
                     // This is dumb... why would you change the key here. No...
+                    currentState = States.QUIT;
                     if (record.getStatus()) break;
                 case "b":
                     record.borrow();
@@ -86,6 +97,13 @@ public class LibraryHandler {
         }
         // sc.close(); if I close the scanner here it crashes...
         currentState = States.ON_HOLD;
+    }
+
+    private boolean isValidOption(String s, int n) {
+        for (int i = 0; i < s.length(); ++i) {
+            if (!Character.isDigit(s.charAt(i))) return false;
+        }
+        return Integer.parseInt(s) <= n;
     }
 
     public LibraryHandler() {

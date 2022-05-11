@@ -1,0 +1,12 @@
+Movie,200,Remember The Alamo,1945,George Smith
+Movie,203,Lord of the ring: the fellowship of the ring,2001,Pete Jackson
+Movie,206,Lord of the ring: the two towers,2002,Peter Jackson
+Movie,210,Going for the Touchdown,1984,Frank Madden
+Movie,211,Martian Hairdresser,1992,Debbie Gold
+Book,231,How to Make Money,1987,Phil Barton,324
+Book,240,Garden Projects At Home,1998,Mary Freeman,164
+Book,202,The Haunted House Mystery,1996,Bert Morgan,53
+Journal,207,ACM,2009,6,8
+Journal,212,ACM,2010,5,8
+Journal,215,J of Logic,2008,23,14
+Journal,281,J of AI,2009,35,1
