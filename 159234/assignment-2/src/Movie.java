@@ -1,8 +1,5 @@
 public class Movie extends Record {
     private String director;
-    Movie() {
-        director = "";
-    }
     Movie(int ID, String title, String director, int year) {
         super(ID, title, year);
         this.director = director;

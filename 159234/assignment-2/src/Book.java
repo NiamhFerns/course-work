@@ -1,10 +1,6 @@
 public class Book extends Record {
     private int pages;
     private String author;
-    Book() {
-        author = "";
-        pages = 0;
-    }
     Book(int ID, String title, String author, int pages, int year) {
         super(ID, title, year);
         this.author = author;

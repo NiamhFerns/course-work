@@ -1,9 +1,5 @@
 public class Journal extends Record {
     private int volume, number;
-    Journal() {
-        this.volume = 0;
-        this.number = 0;
-    }
     Journal(int ID, String title, int volume, int number, int year) {
         super(ID, title, year);
         this.volume = volume;
