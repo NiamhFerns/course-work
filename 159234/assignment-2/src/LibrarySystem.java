@@ -2,7 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Collections;
 
 public class LibrarySystem implements LibraryOperations {
 
@@ -45,13 +45,15 @@ public class LibrarySystem implements LibraryOperations {
             System.out.println("The file \"" + records + "\" could not be found.");
             System.exit(0);
         }
+        
+        sortRecords();
     }
 
-    private void printRecords() {
+    public void printRecords() {
         Records.forEach(Record::shortPrint);
     }
 
-    private void printFullRecords() {
+    public void printFullRecords() {
         Records.forEach(Record::longPrint);
     }
 
@@ -81,6 +83,6 @@ public class LibrarySystem implements LibraryOperations {
     }
     @Override
     public void sortRecords() {
-        return;
+        Collections.sort(Records, new RecordComparator());
     }
 }

@@ -1,9 +1,8 @@
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDate;
 
-public abstract class Record {
+public abstract class Record implements Comparable<Record> {
     protected boolean available;
     protected int ID, year;
     protected final int maxBorrowTime;
@@ -13,7 +12,7 @@ public abstract class Record {
 
     public String getTitle() { return title; }
     public int getID() { return ID; }
-    public double getReviewAverage() { return reviews.size() > 0 ? reviews.stream().reduce(0.0, Double::sum) / reviews.size() : 0.0; }
+    public Double getReviewAverage() { return reviews.size() > 0 ? reviews.stream().reduce(0.0, Double::sum) / reviews.size() : 0.0; }
     public boolean getStatus() { return available; }
 
     public final void shortPrint() {
@@ -38,11 +37,11 @@ public abstract class Record {
             double rating = sc.nextDouble();
             if (rating > 10 || rating < 0) throw new IllegalArgumentException("That is not a valid rating.");
             reviews.add(rating);
+            System.out.println("This item's new average rating is " + getReviewAverage());
         }
         catch(Exception e) {
             System.out.println("This was not a valid rating, please enter a number between 0 and 10.");
         }
-        System.out.println("This item's new average rating is " + getReviewAverage());
     }
     public final void setDate() {
         due = LocalDate.now().plusDays(maxBorrowTime);
@@ -65,4 +64,8 @@ public abstract class Record {
 
     protected abstract int setMaxBorrowTime();
     public abstract void fullPrint();
+
+    public int compareTo(Record r) {
+       return this.getID() - r.getID();
+    }
 }

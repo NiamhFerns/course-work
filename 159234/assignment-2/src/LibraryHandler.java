@@ -26,6 +26,7 @@ public class LibraryHandler {
 
                 case "s":
                     system.sortRecords();
+                    system.printFullRecords();
                     break;
 
                 case "i":
