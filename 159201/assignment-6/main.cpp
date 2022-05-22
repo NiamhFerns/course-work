@@ -10,8 +10,8 @@
 #include<string>
 #include<unordered_map>
 #include<map>
-
-// You need a struct or a vertex or something. Idk man, fuck this shit honestly.
+#include<limits>
+#include<vector>
 
 class Graph
 {
@@ -73,85 +73,58 @@ void Graph::add_edge(char origin, char destination, int weight)
     current->next = new Edge{destination, weight, nullptr};
 }
 
+// Ideally, we'd want to be able to return a map of our graph, but with this algorithm, that would mean we need to convert the map to bet a <char, int>
+// and not a <char, struct>.
 void Graph::run_dijkstra(char origin)
 {
-    /*
-    * -------------------------------------------
-    * PSEUDOCODE FOR ALGORITHM (WITH MAPS NOT VECTORS)
-    * -------------------------------------------
-    * Takes in a Graph & and Source Vertex
-    *
-    * declare map of state structs (distance, state) dest[N]
-    * declare a graph node current = SourceNode
-    *
-    * dest[SourceNode] = {0, p};
-    * for (each vertex v of G) do
-    *     if (v != SourceNode then)
-    *         dest[v] = (∞, t)
-    *     end if
-    * end for
-    *
-    * while (there is a vertex v with state dest[v].state == t) do
-    *     for (each neighbour v of current) do
-    *         dest[v].distance = min (dest[v].distance, dest[current].distance + cost(current, v));
-    *     end for
-    *     find minimum dest[v].distance with state dest[v].state == t, make current = v;
-    *     dest[current].state = p;
-    * end while
-    *
-    */
-
     // Initialising everything.
     struct Destination
     {
         int cost;
         bool permenant;
     };
-
     std::map<char, Destination> costs;
+
     for (auto & [vertex, adjacencies] : Vertices)
     {
         // -1: infinity
         // 0 : temp
-        costs[vertex] = {999999999, 0};
+        costs[vertex] = {std::numeric_limits<int>::max(), 0};
     }
     costs[origin] = {0, 1};
     char current = origin;
 
+    auto edge_check = [](std::map<char, Destination> costs) -> bool {
+        for (auto & [vertex, destination] : costs)
+            if (!destination.permenant) { return true; }
+        return false;
+    };
+
     // Run Dijkstra's
-    bool running = true;
-    while(running)
+    while(edge_check(costs))
     {
-        Edge * v;
-        v = Vertices[current];
+        // Run through each possible destination of our current vertex.
+        // Find the minimum cost for each one.
+        Edge * v = Vertices[current];
         while (v)
         {
             costs[v->destination].cost = std::min(costs[v->destination].cost, costs[current].cost + v->weight);
             v = v->next;
         }
 
-        // Find our next current
-        bool switch_node = true;
+        // Find valid options that are not permenant.
+        std::vector<char> options;
         for(auto & [vertex, desination] : costs)
-        {
-            if(switch_node && !costs[vertex].permenant)
-            {
-                current = vertex;
-                switch_node = false;
-                continue;
-            }
+            if(!desination.permenant) options.emplace_back(vertex);
 
-            current = (desination.cost < costs[current].cost && !desination.permenant ? vertex : current);
-        }
+        // Cycle through said options to find the minimum and make that our next location.
+        current = options[0];
+        for(auto v : options)
+            if(costs[current].cost > costs[v].cost) current = v;
+
+        // Set that location to permenant.
         costs[current].permenant = true;
-
-        for (auto & [vertex, destination] : costs)
-        {
-            if (!destination.permenant) { running = true; break; }
-            running = false;
-        }
     }
-
 
     // Print all our values (easy because in an ordered map. c:)
     for (auto & [vertex, destination] : costs)
@@ -162,8 +135,6 @@ void Graph::run_dijkstra(char origin)
 }
 
 // Utility functions.
-
-
 void read_file(const std::string & s, Graph & g)
 {
     std::ifstream input;
