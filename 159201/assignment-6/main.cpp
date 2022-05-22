@@ -4,6 +4,8 @@
  * Shortest Path Finder - Weighted Graphs
  */
 
+// NOTE: THIS USES C++17. YOU WILL NEED IT FOR THE STRUCTURERD BINDINGS.
+
 #include<iostream>
 #include<cstdlib>
 #include<fstream>
