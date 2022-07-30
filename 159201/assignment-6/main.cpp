@@ -47,9 +47,7 @@ int main(int argc, char ** argv)
     read_file(argv[1], graph);
     graph.run_dijkstra('A');
 
-
     return 0;
-
 }
 
 void Graph::add_vertex(char vertex)
