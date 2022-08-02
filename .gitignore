@@ -1,2 +1,7 @@
 .ccls*
+<<<<<<< HEAD
 SWEN-225/lab*/
+=======
+.idea/
+159261/game-assignment-2/
+>>>>>>> fcf620c1a0565d585267935b782268cd20b71527
