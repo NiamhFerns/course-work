@@ -1,0 +1,6 @@
+$count = 5; 
+while (gt($count, 0)){
+  move;
+  $count = sub($count, 1);
+}
+turnL;

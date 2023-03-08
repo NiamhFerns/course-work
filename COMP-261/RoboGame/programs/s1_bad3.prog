@@ -1,0 +1,4 @@
+while(gt(wallDist, barrelFB)){
+	move; 
+	wait;
+}

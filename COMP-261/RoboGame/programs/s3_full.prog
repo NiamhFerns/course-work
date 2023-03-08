@@ -1,0 +1,48 @@
+while(or(gt(fuelLeft, sub(mul(div(5, add(1, 4)), -1), -1)), eq(1, 0))){
+	shieldOff;
+	$numBar = numBarrels;
+	$spurious = add($numBar, $empty);
+	$spurious = mul($spurious, $empty);
+	if(not(not(eq($numBar, 0)))){
+		if(and(eq(oppLR, $thresh), eq(oppFB, 1))){
+			takeFuel;
+		} else{
+			if(and(eq(oppLR, 0), eq(oppFB, -1))){
+				if(gt(wallDist, 0)){
+					move;
+				} else{
+					shieldOn;
+				}
+			} else{
+				wait(1);
+			}
+		}
+	} else{
+	        $first = 0;
+		if(and(eq(barrelFB(0), 0), eq(barrelLR($first), 0))){
+			takeFuel;
+		} elif (gt($numBar, $numBar )){
+		     move(10);
+		} elif (lt(barrelLR(sub(numBarrels, 1)), -45) ){
+		     move(barrelFB(3));
+		} else{
+			if(eq(0, barrelFB)){
+				if(lt(barrelLR, 0)){
+					turnL;
+				} else{
+					turnR;
+				}
+			} else{
+				if(gt(barrelFB, 0)){
+					if(gt(barrelFB, 1)){
+						move(div(barrelFB, 2));
+					} else{
+						move;
+					}
+				} else{
+					turnAround;
+				}
+			}
+		}
+	}
+}

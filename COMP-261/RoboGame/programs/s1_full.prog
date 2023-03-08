@@ -1,0 +1,43 @@
+while(gt(fuelLeft, 0)){
+	if(gt(fuelLeft, 95)){
+		shieldOn;
+	}
+	if(lt(fuelLeft, 85)){
+		shieldOff;
+	}
+	if(gt(numBarrels, 0)){
+		if(eq(barrelFB, 0)){
+			if(eq(barrelLR, 0)){
+				takeFuel;
+			}
+		}
+		if(gt(barrelFB, 0)){ 
+			move; 
+		}
+		if(lt(barrelFB, 0)){
+			turnAround;
+		}
+		if(lt(barrelLR, 0)){
+			turnL;
+		}
+		if(gt(barrelLR, 0)){
+			turnR;
+		}
+	}
+	if(eq(numBarrels, 0)){
+		if(lt(oppLR, 0)){
+			turnR;
+		}
+		if(gt(oppLR, 0)){
+			turnL;
+		}
+		if(gt(oppFB, 0)){
+			turnAround;
+		}
+		if(lt(oppFB, 0)){
+			if(gt(wallDist, 1)){
+				move;
+			}
+		}
+	}
+}
