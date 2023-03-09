@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int editor_insert_char(char editing_buffer[], int editing_buflen,
     char to_insert, int pos)
@@ -69,13 +70,21 @@ int editor_replace_str(char editing_buffer[], int editing_buflen,
     // Find the offset.
     for (int i = offset, str_pos = 0; i < editing_buflen; ++i) {
         if (editing_buffer[i] == str[str_pos]) {
-            in_word = 1;
-            if (str[str_pos + 1] == '\0')
+            if (!in_word) {
+                offset = i;
+                in_word = 1;
+            }
+            str_pos++;
+            if (str[str_pos] == '\0')
                 break;
         } else {
             offset = i;
+            str_pos = 0;
+            in_word = 0;
         }
     }
+
+    if (!in_word) return -1;
 
     // Shift characters to the left.
     if (str_len > rep_len) {
@@ -103,12 +112,13 @@ int editor_replace_str(char editing_buffer[], int editing_buflen,
         }
     }
 
+    int i, j;
     // Replace the string.
-    for (int i = offset, j = 0; replacement[j] != '\0'; ++i, ++j) {
+    for (i = offset, j = 0; replacement[j] != '\0'; ++i, ++j) {
         editing_buffer[i] = replacement[j];
     }
 
-    return 0;
+    return i - 1;
 }
 
 void editor_view(int rows, int cols, char viewing_buffer[rows][cols],
@@ -116,3 +126,13 @@ void editor_view(int rows, int cols, char viewing_buffer[rows][cols],
 {
     printf("Unimplemented");
 }
+
+// int main (int argc, char *argv[])
+// {
+//     char* editing_buffer = malloc(sizeof(char) * 21);
+//     strcpy(editing_buffer, "The quick brown fox");
+//
+//     editor_replace_str(editing_buffer, 21, "brown", "blue", 0);
+//     
+//     return 0;
+// }
