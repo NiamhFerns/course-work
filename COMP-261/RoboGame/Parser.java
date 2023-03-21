@@ -18,6 +18,11 @@ public class Parser {
     static final Pattern CLOSEPAREN = Pattern.compile("\\)");
     static final Pattern OPENBRACE = Pattern.compile("\\{");
     static final Pattern CLOSEBRACE = Pattern.compile("\\}");
+    static final Pattern SEMICOLON = Pattern.compile(";");
+    static final Pattern ACT_PATTERN = Pattern.compile("move|turnL|turnR|takeFuel|wait");
+    static final Pattern LOOP_PATTERN = Pattern.compile("loop");
+    static final Pattern IF_PATTERN = Pattern.compile("if");
+    static final Pattern WHILE_PATTERN = Pattern.compile("while");
 
     //----------------------------------------------------------------
     /**
@@ -28,18 +33,9 @@ public class Parser {
     ProgramNode parse(Scanner s) {
         // Set the delimiter for the scanner.
         s.useDelimiter("\\s+|(?=[{}(),;])|(?<=[{}(),;])");
-        // THE PARSER GOES HERE
-        // Call the parseProg method for the first grammar rule (PROG) and return the node
-        return null;
+        if (!s.hasNext()) Parser.fail("No code provided for parser to parse.", s);
+        return Program.parse(s);
     }
-
-
-
-
-
-
-
-
 
     //----------------------------------------------------------------
     // utility methods for the parser
@@ -67,13 +63,13 @@ public class Parser {
     static String require(String p, String message, Scanner s) {
         if (s.hasNext(p)) {return s.next();}
         fail(message, s);
-        return null;
+        return "";
     }
 
     static String require(Pattern p, String message, Scanner s) {
         if (s.hasNext(p)) {return s.next();}
         fail(message, s);
-        return null;
+        return "";
     }
 
     /**
