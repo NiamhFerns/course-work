@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Interface for all nodes that can be executed,
@@ -11,18 +12,29 @@ interface ProgramNode {
     void execute(Robot robot);
 }
 
-record Program(ArrayList<Statement> statements) implements ProgramNode {
+interface BooleanNode {
+    boolean evaluate(Robot robot);
+}
+interface NumericNode {
+    int retrieve(Robot robot);
+}
+
+interface TriFunction<T, U, V, R> {
+    R apply(T t, U u, V v);
+}
+
+record Program(ArrayList<StatementNode> statementNodes) implements ProgramNode {
     @Override
     public void execute(Robot robot) {
-        for (ProgramNode s : statements) {
+        for (ProgramNode s : statementNodes) {
             s.execute(robot);
         }
     }
 
     public static Program parse(Scanner s) {
-        var statements = new ArrayList<Statement>();
+        var statements = new ArrayList<StatementNode>();
         while (s.hasNext()) {
-            statements.add(Statement.parse(s));
+            statements.add(StatementNode.parse(s));
         }
         return new Program(statements);
     }
@@ -30,32 +42,32 @@ record Program(ArrayList<Statement> statements) implements ProgramNode {
     @Override
     public String toString() {
         var s = new StringBuilder();
-        for (var statement : statements) {
+        for (var statement : statementNodes) {
             s.append(statement.toString()).append("\n");
         }
         return s.toString();
     }
 }
-record Statement(ProgramNode statement) implements ProgramNode {
+record StatementNode(ProgramNode statement) implements ProgramNode {
     @Override
     public void execute(Robot robot) {
         if (statement != null)
             statement.execute(robot);
     }
 
-    public static Statement parse(Scanner s) {
-        if (s.hasNext(Parser.ACT_PATTERN)) return Act.parse(s);
-        if (Parser.checkFor(Parser.LOOP_PATTERN, s)) return Loop.parse(s);
+    public static StatementNode parse(Scanner s) {
+        if (s.hasNext(Parser.ACT_PATTERN)) return ActNode.parse(s);
+        if (Parser.checkFor(Parser.LOOP_PATTERN, s)) return LoopNode.parse(s);
         Parser.fail("Not a valid code piece of code.", s);
-        return Statement.of(null);
+        return StatementNode.of(null);
     }
 
     public static boolean check(Scanner s) {
         return s.hasNext(Parser.ACT_PATTERN) | s.hasNext(Parser.LOOP_PATTERN);
     }
 
-    static Statement of(ProgramNode n) {
-        return new Statement(n);
+    static StatementNode of(ProgramNode n) {
+        return new StatementNode(n);
     }
 
     @Override
@@ -64,7 +76,7 @@ record Statement(ProgramNode statement) implements ProgramNode {
     }
 }
 
-record Act(Acts action) implements ProgramNode {
+record ActNode(Acts action) implements ProgramNode {
     enum Acts {
         MOVE("move", Robot::move),
         TURNL("turnL", Robot::turnLeft),
@@ -91,10 +103,10 @@ record Act(Acts action) implements ProgramNode {
         }
     }
 
-    static Statement parse(Scanner s) {
+    static StatementNode parse(Scanner s) {
         var action = Acts.valueOf(Parser.require(Parser.ACT_PATTERN, "This is not a valid action", s).toUpperCase());
         Parser.require(Parser.SEMICOLON, "Syntax error: failed to find ';'.", s);
-        return Statement.of(new Act(action));
+        return StatementNode.of(new ActNode(action));
     }
 
     @Override
@@ -108,68 +120,167 @@ record Act(Acts action) implements ProgramNode {
     }
 }
 
-record Loop(Block block) implements ProgramNode {
+record LoopNode(BlockNode blockNode) implements ProgramNode {
     @Override
     public void execute(Robot robot) {
         // Infinitely loop all statements in the block.
         while(true) {
-            block.execute(robot);
+            blockNode.execute(robot);
         }
     }
 
-    static Statement parse(Scanner s) {
-        return Statement.of(new Loop(Block.parse(s)));
+    static StatementNode parse(Scanner s) {
+        return StatementNode.of(new LoopNode(BlockNode.parse(s)));
     }
 
     @Override
     public String toString() {
-        return "loop" + block.toString();
+        return "loop" + blockNode.toString();
     }
 }
 
-record While(Block block) implements ProgramNode {
+record WhileNode(BooleanNode condition, BlockNode blockNode) implements ProgramNode {
     @Override
     public void execute(Robot robot) {
         // Infinitely loop all statements in the block.
         while(true) {
-            block.execute(robot);
+            blockNode.execute(robot);
         }
     }
 
-    static Statement parse(Scanner s) {
-        return Statement.of(new Loop(Block.parse(s)));
+    static StatementNode parse(Scanner s) {
+        return StatementNode.of(new LoopNode(BlockNode.parse(s)));
     }
 
     @Override
     public String toString() {
-        return "loop" + block.toString();
+        return "loop" + blockNode.toString();
     }
 }
 
-record Block(ArrayList<Statement> statements) implements ProgramNode {
+record IfNode(BooleanNode condition, BlockNode blockNode) implements ProgramNode {
     @Override
     public void execute(Robot robot) {
-        for (Statement s : statements) {
+        // Infinitely loop all statements in the block.
+        if (condition.evaluate(robot))
+            blockNode.execute(robot);
+    }
+
+    static CondNode parse(Scanner s) {
+        var rel = CondNode.Relation.valueOf(Parser.require(Parser.RELATION_PATTERN, "Not a valid relation.", s).toUpperCase());
+        Parser.require(Parser.OPENPAREN, "Missing open parenthesis.", s);
+        var sens = SensNode.parse(s);
+        Parser.require(Parser.COMMA_PATTERN, "Missing comma.", s);
+        var value = NumNode.parse(s);
+        Parser.require(Parser.CLOSEPAREN, "Missing close parenthesis.", s);
+        return new CondNode(rel, sens, value);
+    }
+
+    @Override
+    public String toString() {
+        return "loop" + blockNode.toString();
+    }
+}
+
+record BlockNode(ArrayList<StatementNode> statementNodes) implements ProgramNode {
+    @Override
+    public void execute(Robot robot) {
+        for (StatementNode s : statementNodes) {
             s.execute(robot);
         }
     }
 
-    static Block parse(Scanner s) {
+    static BlockNode parse(Scanner s) {
         Parser.require(Parser.OPENBRACE, "Missing opening brace '{'.", s);
-        var statements = new ArrayList<Statement>();
-        while(Statement.check(s)) {
-            statements.add(Statement.parse(s));
+        var statements = new ArrayList<StatementNode>();
+        while(StatementNode.check(s)) {
+            statements.add(StatementNode.parse(s));
         }
         Parser.require(Parser.CLOSEBRACE, "Missing closing brace '}'.", s);
-        return new Block(statements);
+        return new BlockNode(statements);
     }
 
     @Override
     public String toString() {
         var s = new StringBuilder();
-        for (var statement : statements) {
+        for (var statement : statementNodes) {
             s.append(statement.toString()).append("\n");
         }
         return s.toString();
+    }
+}
+
+record CondNode(Relation relation, NumericNode p, NumericNode q) implements BooleanNode {
+    enum Relation {
+        LT("lt", (p, q, robot) -> p.retrieve(robot) < q.retrieve(robot)),
+        GT("gt", (p, q, robot) -> p.retrieve(robot) > q.retrieve(robot)),
+        EQ("eq", (p, q, robot) -> p.retrieve(robot) == q.retrieve(robot));
+
+        private final String action;
+        private final TriFunction<NumericNode, NumericNode, Robot, Boolean> strategy;
+
+        String current() {
+            return action;
+        }
+        TriFunction<NumericNode, NumericNode, Robot, Boolean> retrieve() {
+            return strategy;
+        }
+
+        Relation(String action, TriFunction<NumericNode, NumericNode, Robot, Boolean> strategy) {
+            this.action = action;
+            this.strategy = strategy;
+        }
+    }
+
+    @Override
+    public boolean evaluate(Robot robot) {
+        return relation.retrieve().apply(p, q, robot);
+    }
+}
+
+record SensNode(Sensor sensor) implements NumericNode {
+    @Override
+    public int retrieve(Robot robot) {
+        return sensor.retrieve().apply(robot);
+    }
+
+    enum Sensor {
+        FUELLEFT("fuelLeft", Robot::getFuel),
+        OPPLR("oppLR", Robot::getOpponentLR),
+        OPPFB("oppFB", Robot::getOpponentFB),
+        NUMBARRELS("numBarrel", Robot::numBarrels),
+        BARRELLR("barrelLR", Robot::getClosestBarrelLR),
+        BARRELFB("barrelFB", Robot::getClosestBarrelFB),
+        WALLDIST("wallDist", Robot::getDistanceToWall);
+
+        private final String action;
+        private final Function<Robot, Integer> strategy;
+
+        String current() {
+            return action;
+        }
+        Function<Robot, Integer> retrieve() {
+            return strategy;
+        }
+
+        Sensor(String action, Function<Robot, Integer> strategy) {
+            this.action = action;
+            this.strategy = strategy;
+        }
+    }
+
+    static SensNode parse(Scanner s) {
+        var action = SensNode.Sensor.valueOf(Parser.require(Parser.SENSOR_PATTERN, "This is not a valid sensor.", s).toUpperCase());
+        return new SensNode(action);
+    }
+}
+
+record NumNode(int n) implements NumericNode {
+    public static NumNode parse(Scanner s) {
+        return new NumNode(Parser.requireInt(Parser.NUMPAT, "Not a valid number.", s));
+    }
+    @Override
+    public int retrieve(Robot robot) {
+        return n;
     }
 }

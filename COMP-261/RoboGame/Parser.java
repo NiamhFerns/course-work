@@ -18,11 +18,14 @@ public class Parser {
     static final Pattern CLOSEPAREN = Pattern.compile("\\)");
     static final Pattern OPENBRACE = Pattern.compile("\\{");
     static final Pattern CLOSEBRACE = Pattern.compile("\\}");
+    static final Pattern COMMA_PATTERN = Pattern.compile(",");
     static final Pattern SEMICOLON = Pattern.compile(";");
     static final Pattern ACT_PATTERN = Pattern.compile("move|turnL|turnR|takeFuel|wait");
     static final Pattern LOOP_PATTERN = Pattern.compile("loop");
     static final Pattern IF_PATTERN = Pattern.compile("if");
     static final Pattern WHILE_PATTERN = Pattern.compile("while");
+    static final Pattern SENSOR_PATTERN = Pattern.compile("fuelLeft|oppLR|oppFB|numBarrels|barrelLR|barrelFB|wallDist");
+    static final Pattern RELATION_PATTERN = Pattern.compile("gt|lt|eq");
 
     //----------------------------------------------------------------
     /**
