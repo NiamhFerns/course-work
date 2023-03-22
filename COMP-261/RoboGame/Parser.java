@@ -13,19 +13,19 @@ public class Parser {
 
     // Useful Patterns
 
-    static final Pattern NUMPAT = Pattern.compile("-?[1-9][0-9]*|0"); 
-    static final Pattern OPENPAREN = Pattern.compile("\\(");
-    static final Pattern CLOSEPAREN = Pattern.compile("\\)");
-    static final Pattern OPENBRACE = Pattern.compile("\\{");
-    static final Pattern CLOSEBRACE = Pattern.compile("\\}");
-    static final Pattern COMMA_PATTERN = Pattern.compile(",");
-    static final Pattern SEMICOLON = Pattern.compile(";");
-    static final Pattern ACT_PATTERN = Pattern.compile("move|turnL|turnR|takeFuel|wait");
-    static final Pattern LOOP_PATTERN = Pattern.compile("loop");
-    static final Pattern IF_PATTERN = Pattern.compile("if");
-    static final Pattern WHILE_PATTERN = Pattern.compile("while");
-    static final Pattern SENSOR_PATTERN = Pattern.compile("fuelLeft|oppLR|oppFB|numBarrels|barrelLR|barrelFB|wallDist");
-    static final Pattern RELATION_PATTERN = Pattern.compile("gt|lt|eq");
+    static final Pattern NUM_PAT = Pattern.compile("-?[1-9][0-9]*|0");
+    static final Pattern OPEN_PAREN_PAT = Pattern.compile("\\(");
+    static final Pattern CLOSE_PAREN_PAT = Pattern.compile("\\)");
+    static final Pattern OPEN_BRACE_PAT = Pattern.compile("\\{");
+    static final Pattern CLOSE_BRACE_PAT = Pattern.compile("\\}");
+    static final Pattern COMMA_PAT = Pattern.compile(",");
+    static final Pattern TERMINATION_PAT = Pattern.compile(";");
+    static final Pattern ACT_PAT = Pattern.compile("move|turnL|turnR|takeFuel|wait");
+    static final Pattern LOOP_PAT = Pattern.compile("loop");
+    static final Pattern IF_PAT = Pattern.compile("if");
+    static final Pattern WHILE_PAT = Pattern.compile("while");
+    static final Pattern SENSOR_PAT = Pattern.compile("fuelLeft|oppLR|oppFB|numBarrels|barrelLR|barrelFB|wallDist");
+    static final Pattern RELATION_PAT = Pattern.compile("gt|lt|eq");
 
     //----------------------------------------------------------------
     /**
@@ -94,7 +94,7 @@ public class Parser {
 
     /**
      * Checks whether the next token in the scanner matches the specified
-     * pattern, if so, consumes the token and return true. Otherwise returns
+     * pattern, if so, consumes the token and return true, otherwise returns
      * false without consuming anything.
      */
     static boolean checkFor(String p, Scanner s) {

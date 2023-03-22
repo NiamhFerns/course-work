@@ -56,14 +56,14 @@ record StatementNode(ProgramNode statement) implements ProgramNode {
     }
 
     public static StatementNode parse(Scanner s) {
-        if (s.hasNext(Parser.ACT_PATTERN)) return ActNode.parse(s);
-        if (Parser.checkFor(Parser.LOOP_PATTERN, s)) return LoopNode.parse(s);
+        if (s.hasNext(Parser.ACT_PAT)) return ActNode.parse(s);
+        if (Parser.checkFor(Parser.LOOP_PAT, s)) return LoopNode.parse(s);
         Parser.fail("Not a valid code piece of code.", s);
         return StatementNode.of(null);
     }
 
     public static boolean check(Scanner s) {
-        return s.hasNext(Parser.ACT_PATTERN) | s.hasNext(Parser.LOOP_PATTERN);
+        return s.hasNext(Parser.ACT_PAT) | s.hasNext(Parser.LOOP_PAT);
     }
 
     static StatementNode of(ProgramNode n) {
@@ -77,6 +77,7 @@ record StatementNode(ProgramNode statement) implements ProgramNode {
 }
 
 record ActNode(Acts action) implements ProgramNode {
+    @SuppressWarnings({"unused", "SpellCheckingInspection"})
     enum Acts {
         MOVE("move", Robot::move),
         TURNL("turnL", Robot::turnLeft),
@@ -104,8 +105,8 @@ record ActNode(Acts action) implements ProgramNode {
     }
 
     static StatementNode parse(Scanner s) {
-        var action = Acts.valueOf(Parser.require(Parser.ACT_PATTERN, "This is not a valid action", s).toUpperCase());
-        Parser.require(Parser.SEMICOLON, "Syntax error: failed to find ';'.", s);
+        var action = Acts.valueOf(Parser.require(Parser.ACT_PAT, "This is not a valid action", s).toUpperCase());
+        Parser.require(Parser.TERMINATION_PAT, "Syntax error: failed to find ';'.", s);
         return StatementNode.of(new ActNode(action));
     }
 
@@ -120,13 +121,12 @@ record ActNode(Acts action) implements ProgramNode {
     }
 }
 
+@SuppressWarnings("InfiniteLoopStatement")
 record LoopNode(BlockNode blockNode) implements ProgramNode {
     @Override
     public void execute(Robot robot) {
         // Infinitely loop all statements in the block.
-        while(true) {
-            blockNode.execute(robot);
-        }
+        while(true) blockNode.execute(robot);
     }
 
     static StatementNode parse(Scanner s) {
@@ -142,10 +142,6 @@ record LoopNode(BlockNode blockNode) implements ProgramNode {
 record WhileNode(BooleanNode condition, BlockNode blockNode) implements ProgramNode {
     @Override
     public void execute(Robot robot) {
-        // Infinitely loop all statements in the block.
-        while(true) {
-            blockNode.execute(robot);
-        }
     }
 
     static StatementNode parse(Scanner s) {
@@ -166,14 +162,13 @@ record IfNode(BooleanNode condition, BlockNode blockNode) implements ProgramNode
             blockNode.execute(robot);
     }
 
-    static CondNode parse(Scanner s) {
-        var rel = CondNode.Relation.valueOf(Parser.require(Parser.RELATION_PATTERN, "Not a valid relation.", s).toUpperCase());
-        Parser.require(Parser.OPENPAREN, "Missing open parenthesis.", s);
-        var sens = SensNode.parse(s);
-        Parser.require(Parser.COMMA_PATTERN, "Missing comma.", s);
-        var value = NumNode.parse(s);
-        Parser.require(Parser.CLOSEPAREN, "Missing close parenthesis.", s);
-        return new CondNode(rel, sens, value);
+    static IfNode parse(Scanner s) {
+        Parser.require(Parser.IF_PAT, "Not a valid command.", s);
+        Parser.require(Parser.OPEN_PAREN_PAT, "Missing open parenthesis.", s);
+        var cond = CondNode.parse(s);
+        Parser.require(Parser.CLOSE_PAREN_PAT, "Missing close parenthesis.", s);
+        var block = BlockNode.parse(s);
+        return new IfNode(cond, block);
     }
 
     @Override
@@ -191,12 +186,12 @@ record BlockNode(ArrayList<StatementNode> statementNodes) implements ProgramNode
     }
 
     static BlockNode parse(Scanner s) {
-        Parser.require(Parser.OPENBRACE, "Missing opening brace '{'.", s);
+        Parser.require(Parser.OPEN_BRACE_PAT, "Missing opening brace '{'.", s);
         var statements = new ArrayList<StatementNode>();
         while(StatementNode.check(s)) {
             statements.add(StatementNode.parse(s));
         }
-        Parser.require(Parser.CLOSEBRACE, "Missing closing brace '}'.", s);
+        Parser.require(Parser.CLOSE_BRACE_PAT, "Missing closing brace '}'.", s);
         return new BlockNode(statements);
     }
 
@@ -211,6 +206,7 @@ record BlockNode(ArrayList<StatementNode> statementNodes) implements ProgramNode
 }
 
 record CondNode(Relation relation, NumericNode p, NumericNode q) implements BooleanNode {
+    @SuppressWarnings("unused")
     enum Relation {
         LT("lt", (p, q, robot) -> p.retrieve(robot) < q.retrieve(robot)),
         GT("gt", (p, q, robot) -> p.retrieve(robot) > q.retrieve(robot)),
@@ -232,6 +228,16 @@ record CondNode(Relation relation, NumericNode p, NumericNode q) implements Bool
         }
     }
 
+    public static CondNode parse(Scanner s) {
+        var rel = CondNode.Relation.valueOf(Parser.require(Parser.RELATION_PAT, "Not a valid relation.", s).toUpperCase());
+        Parser.require(Parser.OPEN_PAREN_PAT, "Missing open parenthesis.", s);
+        var sens = SensNode.parse(s);
+        Parser.require(Parser.COMMA_PAT, "Missing comma.", s);
+        var value = NumNode.parse(s);
+        Parser.require(Parser.CLOSE_PAREN_PAT, "Missing close parenthesis.", s);
+        return new CondNode(rel, sens, value);
+    }
+
     @Override
     public boolean evaluate(Robot robot) {
         return relation.retrieve().apply(p, q, robot);
@@ -244,6 +250,7 @@ record SensNode(Sensor sensor) implements NumericNode {
         return sensor.retrieve().apply(robot);
     }
 
+    @SuppressWarnings({"unused", "SpellCheckingInspection"})
     enum Sensor {
         FUELLEFT("fuelLeft", Robot::getFuel),
         OPPLR("oppLR", Robot::getOpponentLR),
@@ -270,14 +277,14 @@ record SensNode(Sensor sensor) implements NumericNode {
     }
 
     static SensNode parse(Scanner s) {
-        var action = SensNode.Sensor.valueOf(Parser.require(Parser.SENSOR_PATTERN, "This is not a valid sensor.", s).toUpperCase());
+        var action = SensNode.Sensor.valueOf(Parser.require(Parser.SENSOR_PAT, "This is not a valid sensor.", s).toUpperCase());
         return new SensNode(action);
     }
 }
 
 record NumNode(int n) implements NumericNode {
     public static NumNode parse(Scanner s) {
-        return new NumNode(Parser.requireInt(Parser.NUMPAT, "Not a valid number.", s));
+        return new NumNode(Parser.requireInt(Parser.NUM_PAT, "Not a valid number.", s));
     }
     @Override
     public int retrieve(Robot robot) {
