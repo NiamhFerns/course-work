@@ -20,7 +20,7 @@ public class Parser {
     static final Pattern CLOSE_BRACE_PAT = Pattern.compile("\\}");
     static final Pattern COMMA_PAT = Pattern.compile(",");
     static final Pattern TERMINATION_PAT = Pattern.compile(";");
-    static final Pattern ACT_PAT = Pattern.compile("move|turnL|turnR|takeFuel|wait");
+    static final Pattern ACT_PAT = Pattern.compile("move|turnL|turnR|takeFuel|wait|turnAround|shieldOn|shieldOff|");
     static final Pattern LOOP_PAT = Pattern.compile("loop");
     static final Pattern IF_PAT = Pattern.compile("if");
     static final Pattern WHILE_PAT = Pattern.compile("while");
