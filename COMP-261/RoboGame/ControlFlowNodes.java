@@ -1,14 +1,19 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Record responsible for representing a LOOP node that will infinitely loop a block of code when executed.
+ */
 @SuppressWarnings("InfiniteLoopStatement")
 record LoopNode(BlockNode blockNode) implements ProgramNode {
     @Override
     public void execute(Robot robot) {
-        // Infinitely loop all statements in the block.
         while(true) blockNode.execute(robot);
     }
 
+    /**
+     * Parses in and returns a StatementNode containing a Loop.
+     */
     static StatementNode parse(Scanner s) {
         return StatementNode.of(new LoopNode(BlockNode.parse(s)));
     }
@@ -19,14 +24,13 @@ record LoopNode(BlockNode blockNode) implements ProgramNode {
     }
 }
 
+/**
+ * Record responsible for representing a WHILE node that will loop over a block of code while some condition is met.
+ */
 record WhileNode(BooleanNode condition, BlockNode blockNode) implements ProgramNode {
-    @Override
-    public void execute(Robot robot) {
-        while(condition.evaluate(robot)) {
-            blockNode().execute(robot);
-        }
-    }
-
+    /**
+     * Parses in and returns a StatementNode containing a while loop.
+     */
     static StatementNode parse(Scanner s) {
         Parser.require(Parser.OPEN_PAREN_PAT, "Missing open parenthesis.", s);
         var cond = CondNode.parse(s);
@@ -36,19 +40,25 @@ record WhileNode(BooleanNode condition, BlockNode blockNode) implements ProgramN
     }
 
     @Override
+    public void execute(Robot robot) {
+        while(condition.evaluate(robot)) {
+            blockNode().execute(robot);
+        }
+    }
+
+    @Override
     public String toString() {
         return "while(" + condition.toString() + ")" + blockNode.toString();
     }
 }
 
+/**
+ * Record responsible for representing an IF node that will execute a block of code once only if some conditional is met.
+ */
 record IfNode(BooleanNode condition, BlockNode blockNode) implements ProgramNode {
-    @Override
-    public void execute(Robot robot) {
-        // Infinitely loop all statements in the block.
-        if (condition.evaluate(robot))
-            blockNode.execute(robot);
-    }
-
+    /**
+     * Parses in and returns a StatementNode containing an if conditional.
+     */
     static StatementNode parse(Scanner s) {
         Parser.require(Parser.OPEN_PAREN_PAT, "Missing open parenthesis.", s);
         var cond = CondNode.parse(s);
@@ -58,19 +68,26 @@ record IfNode(BooleanNode condition, BlockNode blockNode) implements ProgramNode
     }
 
     @Override
+    public void execute(Robot robot) {
+        // Infinitely loop all statements in the block.
+        if (condition.evaluate(robot))
+            blockNode.execute(robot);
+    }
+
+    @Override
     public String toString() {
         return "if(" + condition.toString() + ")" + blockNode.toString();
     }
 }
 
+/**
+ * Record responsible for denoting scope and holding a set of statements in a block that govern what is run by some other
+ * control flow statement.
+ */
 record BlockNode(ArrayList<StatementNode> statementNodes) implements ProgramNode {
-    @Override
-    public void execute(Robot robot) {
-        for (StatementNode s : statementNodes) {
-            s.execute(robot);
-        }
-    }
-
+    /**
+     * Parses in and returns a BlockNode containing a list of all the statements it can execute.
+     */
     static BlockNode parse(Scanner s) {
         Parser.require(Parser.OPEN_BRACE_PAT, "Missing opening brace '{'.", s);
         var statements = new ArrayList<StatementNode>();
@@ -80,6 +97,13 @@ record BlockNode(ArrayList<StatementNode> statementNodes) implements ProgramNode
         Parser.require(Parser.CLOSE_BRACE_PAT, "Missing closing brace '}'.", s);
         if (statements.isEmpty()) Parser.fail("Empty block statement.", s);
         return new BlockNode(statements);
+    }
+
+    @Override
+    public void execute(Robot robot) {
+        for (StatementNode s : statementNodes) {
+            s.execute(robot);
+        }
     }
 
     @Override
