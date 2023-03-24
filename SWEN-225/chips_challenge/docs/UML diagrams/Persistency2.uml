@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>/Users/george/Documents/SWEN225/Assignments/GroupProject/chips_challenge/src/test/nz/ac/vuw/ecs/swen225/gp22/persistency2</OriginalElement>
+  <nodes>
+    <node x="-255.1503778318904" y="244.8610390943081">nz.ac.vuw.ecs.swen225.gp22.persistency2.CellTest</node>
+    <node x="101.17489193887826" y="665.7595455615204">nz.ac.vuw.ecs.swen225.gp22.persistency2.FreeTileTest</node>
+    <node x="428.8526050014933" y="284.5551976642596">nz.ac.vuw.ecs.swen225.gp22.persistency2.helpers.GameSaveHelperTest</node>
+    <node x="623.1019751301574" y="-18.796799277647835">nz.ac.vuw.ecs.swen225.gp22.persistency2.custom.CustomMovingEntityServiceTest</node>
+    <node x="1232.1546380922439" y="129.98282023593077">nz.ac.vuw.ecs.swen225.gp22.persistency2.EntityTest</node>
+    <node x="1435.891467444516" y="319.28711636199944">nz.ac.vuw.ecs.swen225.gp22.persistency2.GameSaveTest</node>
+    <node x="865.1661078606079" y="411.6888991498252">nz.ac.vuw.ecs.swen225.gp22.persistency2.helpers.LevelHelperTest</node>
+    <node x="846.1361226707098" y="624.0021926578441">nz.ac.vuw.ecs.swen225.gp22.persistency2.helpers.LevelMapTest</node>
+    <node x="207.21113171720816" y="-22.410344506238914">nz.ac.vuw.ecs.swen225.gp22.persistency2.DirectionTest</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic" zoom="0.7099132023755139" showDependencies="false" x="838.5" y="490.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

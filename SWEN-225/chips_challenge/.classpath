@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="test/" kind="src" path="src"/>
+	<classpathentry kind="src" path="src/test"/>
+	<classpathentry excluding="src/|src/test/" kind="src" path=""/>
+	<classpathentry kind="lib" path="levels/level2.jar"/>
+	<classpathentry kind="lib" path="lib/apiguardian-api-1.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/byte-buddy-1.12.17.jar"/>
+	<classpathentry kind="lib" path="lib/byte-buddy-agent-1.12.17.jar"/>
+	<classpathentry kind="lib" path="lib/byte-buddy-dep-1.12.17.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-text-1.9.jar"/>
+	<classpathentry kind="lib" path="lib/dom4j-2.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/guava-31.1-jre.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-annotations-2.13.4.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.13.4.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-databind-2.13.4.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-dataformat-xml-2.13.4.jar"/>
+	<classpathentry kind="lib" path="lib/jaxen-1.1.6.jar"/>
+	<classpathentry kind="lib" path="lib/junit-jupiter-5.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-jupiter-api-5.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-jupiter-engine-5.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-jupiter-params-5.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-platform-commons-1.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-platform-engine-1.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-core-4.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-core-4.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-junit-jupiter-4.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/objenesis-3.3.jar"/>
+	<classpathentry kind="lib" path="lib/opentest4j-1.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/stax2-api-4.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/woodstox-core-6.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/woodstox-core-asl-4.4.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

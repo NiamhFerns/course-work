@@ -1,0 +1,85 @@
+class Step
+{
+  Move move; //what move was just inputted
+  GameClock clock;//what time the input was made
+  Inventory inventory; //keeps track of items already obtained
+  GameSave currentState; //From persistency
+}
+
+
+class Recorder
+{
+
+  GameState currentState;
+  ArrayList currentRecording;
+
+  1 -- * Step;
+  1 -- * Replayer;
+
+
+public Step createStep(){
+    //from GameState
+  }
+
+  public void addStep(){
+    //add to this.currentRecording
+  }
+
+  public void saveRecording(){
+    //Called when level completed, stores Recording object in xmlFile
+  }
+
+  public Replayer loadRecording(){
+    //Use FilePaths to locate the File wanted to use for replay
+    //Pass Recording obj to Create Replayer obj to pass to the App/Domain
+  }
+}
+
+class Replayer
+{
+  //pass through a Recording Object
+  Recording recordingToReplay;
+  int replaySpeed; //run off a local ping to auto-update the replay?
+  boolean autoReplay; //false if step-by-step replay
+
+  public void nextStep(){
+    //MouseClickListner for click of step-by-step GUI button to display next step
+  }
+
+  public void prevStep(){
+    //Potentially a move backwards through MoveHistory
+  }
+
+  public void autoPlay(){
+    //sets autoReplay true and runs on Timer ticks/pings which replaySpeed can alter
+  }
+
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class Step
+{
+  position 429 76 185.6875 129.453125;
+}
+
+class Recorder
+{
+  position 35 88 210.15625 163.453125;
+  position.association Recorder__Recording 217,95 0,23;
+  position.association Recorder__Replayer 129,163 35,0;
+  position.association Recorder__Step 209,32 0,29;
+}
+
+class Step
+{
+  position 429 76 185.6875 129.453125;
+}
+
+class Replayer
+{
+  position 191 341 217.828125 163.453125;
+}

@@ -1,0 +1,7 @@
+/out
+.idea
+*.iml
+/saves
+/bin/
+*.DS_Store
+*Recording*

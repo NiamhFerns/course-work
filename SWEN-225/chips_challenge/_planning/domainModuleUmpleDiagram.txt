@@ -1,0 +1,287 @@
+class FreeTile
+{ 
+  Cell myCell;
+public boolean onMoveInto(MovingEntity e, Direction d) {
+  }
+}
+
+class Wall
+{
+  isA FreeTile;
+}
+
+class Domain
+{
+  Persistency persist;
+  * -> 1 Level currentLevel;
+
+  public Level getLevel() {
+  }
+
+  public void movePlayer(Direction dir) {
+  }
+
+  public void update() {
+  }
+
+  public void startLevel(String levelName) {
+  }
+}
+
+class LockedDoor
+{
+  lockColour;
+  isA FreeTile;
+}
+
+class Pit
+{
+  isA FreeTile;
+}
+
+interface Entity
+{
+  boolean interactBefore(MovingEntity e, Direction d, Cell c);
+  boolean interactAfter(MovingEntity e, Direction d, Cell c);
+  int drawHierarchy();
+}
+
+class ExitLock
+{
+  isA FreeTile;
+}
+
+class Treasure
+{
+  isA Entity;
+}
+
+class Key
+{
+  keyColour;
+isA Entity;
+}
+
+class Chip
+{
+  isA MovingEntity;
+}
+
+class Monster
+{
+  isA MovingEntity;
+}
+
+class Exit
+{
+  isA FreeTile;
+}
+
+class Teleporter
+{
+  isA FreeTile;
+}
+
+class Info
+{
+  infoText;
+isA FreeTile;
+}
+
+class MoveableBlock
+{
+  isA MovingEntity;
+}
+
+class AntiHazard
+{
+  isA Entity;
+  hazardType;
+public String getHazardName(){
+
+}
+}
+
+class IceHazard
+{
+  isA Hazard;
+}
+
+class Hazard
+{
+    isA FreeTile;
+hazardType;
+public String getHazardName(){
+
+}
+}
+
+class Cell
+{
+  FreeTile storedTile;
+0..1 -> * Entity entities;
+  0..1 -> 1 FreeTile;
+
+  public ArrayList<Entity> getEntities() {
+  }
+  public FreeTile getTile() {
+  }
+
+  public boolean onMoveInto(MovingEntity e, Direction d) {
+  }
+}
+
+class Level
+{
+  int treasures;
+  0..1 -> * Cell map;
+  0..1 -> 1 Chip player;
+  0..1 -> 0..8 Entity inventory;
+
+  public Entity[] getInventory() {
+  }
+}
+
+class MovingEntity {
+  isA Entity;
+
+  Direction direct;
+  Coord coords;
+  Level level;
+
+  public Direction getDir() {
+  }
+  public void move(Direction dir) {
+  }
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Wall
+{
+  position 964 547 109 60.8667;
+}
+
+class LockedDoor
+{
+  position 1134 723 142 77.8667;
+}
+
+class ExitLock
+{
+  position 904 482 109 60.8667;
+}
+
+class FreeTile
+{
+  position.association Entity__FreeTile 0,10 174,1;
+    position.association FreeTile__Model 110,14 0,11;
+  position.association Entity:entities__FreeTile 0,0 174,9;
+position 1115 275 198 109.867;
+}
+
+class FreeTile
+{
+  position 1115 275 198 109.867;
+}
+
+class Treasure
+{
+  position 31 377 309 94.8667;
+}
+
+class Key
+{
+  position 175 486 266 111.867;
+}
+
+class Chip
+{
+  position 577 425 316 111.867;
+}
+
+class Monster
+{
+  position 377 604 309 94.8667;
+}
+
+class Exit
+{
+  position 1115 554 109 60.8667;
+}
+
+class Teleporter
+{
+  position 1279 555 109 60.8667;
+}
+
+class MoveableBlock
+{
+  position 417 711 309 94.8667;
+}
+
+class Domain
+{
+  position 881 182 222 162.867;
+  position.association Domain__FreeTile 223,1 0,10;
+  position.association Chip__Domain 10,112 30,0;
+  position.association Domain__Entity 0,0 174,17;
+  position.association Domain__Entity:inventory 0,0 310,54;
+  position.association Chip:player__Domain 0,51 139,0;
+  position.association Domain__FreeCell:board 223,13 0,10;
+  position.association Domain__FreeTile:board 223,37 1,0;
+  position.association Cell:board__Domain 223,0 0,52;
+  position.association Domain__Entity:invent 0,0 174,45;
+  position.association Domain__Level:currentLevel 156,0 200,100;
+}
+
+class Pit
+{
+  position 840 647 109 60.8667;
+}
+
+class AntiHazard
+{
+  position 61 671 266 128.867;
+}
+
+class IceHazard
+{
+  position 954 751 109 60.8667;
+}
+
+class Hazard
+{
+  position 980 626 204 110.867;
+}
+
+class Info
+{
+  position 1209 631 128 77.8667;
+}
+
+class Cell
+{
+  position 1093 21 198 160.867;
+  position.association Cell__FreeTile 109,129 119,0;
+  position.association Cell__Entity:entities 0,0 110,5;
+}
+
+class Level
+{
+  position.association Cell:map__Level 116,7 0,10;
+  position.association Entity:inventory__Level 0,0 383,65;
+    position.association Chip:player__Level 14,95 213,0;
+position 782 55 161 94.8667;
+}
+
+class Level
+{
+  position 782 55 161 94.8667;
+}
+
+class MovingEntity
+{
+  position 500 188 309 145.867;
+}

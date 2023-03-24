@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>/Users/zhanghaosong/Desktop/chips_challenge</OriginalElement>
+  <nodes>
+    <node x="293.0" y="476.0">nz.ac.vuw.ecs.swen225.gp22.fuzz.InputStrategy</node>
+    <node x="106.0" y="615.5">test.nz.ac.vuw.ecs.swen225.gp22.fuzz.FollowedInput</node>
+    <node x="791.0" y="464.0">test.nz.ac.vuw.ecs.swen225.gp22.fuzz.ProbInput</node>
+    <node x="293.0" y="616.0">nz.ac.vuw.ecs.swen225.gp22.fuzz.FollowedInput</node>
+    <node x="552.0" y="464.5">nz.ac.vuw.ecs.swen225.gp22.fuzz.ProbInput</node>
+    <node x="66.0" y="464.0">nz.ac.vuw.ecs.swen225.gp22.fuzz.Input</node>
+    <node x="235.0" y="778.0">test.nz.ac.vuw.ecs.swen225.gp22.fuzz.Fuzz</node>
+    <node x="-87.0" y="767.0">nz.ac.vuw.ecs.swen225.gp22.fuzz.Fuzzing</node>
+    <node x="532.0" y="627.0">test.nz.ac.vuw.ecs.swen225.gp22.fuzz.InputStrategy</node>
+    <node x="718.7600038340316" y="811.0">nz.ac.vuw.ecs.swen225.gp22.app.InputGenerator</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="nz.ac.vuw.ecs.swen225.gp22.fuzz.Input" target="nz.ac.vuw.ecs.swen225.gp22.fuzz.InputStrategy" relationship="TO_ONE">
+      <point x="88.5" y="-0.0" />
+      <point x="-104.5" y="-0.0" />
+    </edge>
+    <edge source="nz.ac.vuw.ecs.swen225.gp22.fuzz.ProbInput" target="nz.ac.vuw.ecs.swen225.gp22.fuzz.InputStrategy" relationship="REALIZATION">
+      <point x="-104.5" y="-0.0" />
+      <point x="104.5" y="-0.0" />
+    </edge>
+    <edge source="nz.ac.vuw.ecs.swen225.gp22.fuzz.FollowedInput" target="nz.ac.vuw.ecs.swen225.gp22.fuzz.InputStrategy" relationship="REALIZATION">
+      <point x="0.0" y="-49.0" />
+      <point x="0.0" y="37.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.8761914175941402" showDependencies="true" x="453.89065443631273" y="791.254959611455" />
+  <SelectedNodes>
+    <node>nz.ac.vuw.ecs.swen225.gp22.app.InputGenerator</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
