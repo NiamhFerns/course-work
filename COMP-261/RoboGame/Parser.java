@@ -23,9 +23,11 @@ public class Parser {
     static final Pattern ACT_PAT = Pattern.compile("move|turnL|turnR|takeFuel|wait|turnAround|shieldOn|shieldOff|");
     static final Pattern LOOP_PAT = Pattern.compile("loop");
     static final Pattern IF_PAT = Pattern.compile("if");
+    static final Pattern ELSE_PAT = Pattern.compile("else");
     static final Pattern WHILE_PAT = Pattern.compile("while");
     static final Pattern SENSOR_PAT = Pattern.compile("fuelLeft|oppLR|oppFB|numBarrels|barrelLR|barrelFB|wallDist");
-    static final Pattern RELATION_PAT = Pattern.compile("gt|lt|eq");
+    static final Pattern RELATION_PAT = Pattern.compile("gt|lt|eq|and|or|not");
+    static final Pattern ARITHOP_PAT = Pattern.compile("add|sub|mul|div");
 
     //----------------------------------------------------------------
     /**

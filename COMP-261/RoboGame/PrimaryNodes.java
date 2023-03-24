@@ -83,7 +83,7 @@ record StatementNode(ProgramNode statement) implements ProgramNode {
 /**
  * Node responsible for holding the state and functionality for an ACT.
  */
-record ActNode(Acts action) implements ProgramNode {
+record ActNode(Acts action, ExprNode callCount) implements ProgramNode {
     /**
      * A simple enumeration that holds both the name and functionality for each possible action a robot can take
      * at any one time.
@@ -127,13 +127,28 @@ record ActNode(Acts action) implements ProgramNode {
      */
     static StatementNode parse(Scanner s) {
         var action = Acts.valueOf(Parser.require(Parser.ACT_PAT, "This is not a valid action", s).toUpperCase());
+        ExprNode count = null;
+
+        // Check for multiple calls.
+        if (action.current().matches("move|wait") && Parser.checkFor(Parser.OPEN_PAREN_PAT, s)) {
+            count = ExprNode.parse(s);
+            Parser.require(Parser.CLOSE_PAREN_PAT, "Missing closing parenthesis on repeated " + action.current() + " statement.", s);
+        }
+
         Parser.require(Parser.TERMINATION_PAT, "Syntax error: failed to find ';'.", s);
-        return StatementNode.of(new ActNode(action));
+        return StatementNode.of(new ActNode(action, count));
     }
 
     @Override
     public void execute(Robot robot) {
-        action.go(robot);
+        if (callCount == null) {
+            action.go(robot);
+            return;
+        }
+
+        var count = callCount.asInt(robot);
+        for (int i = 0; i < count; ++i)
+            action.go(robot);
     }
 
     @Override
