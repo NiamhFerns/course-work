@@ -39,7 +39,7 @@ public class Parser {
         // Set the delimiter for the scanner.
         s.useDelimiter("\\s+|(?=[{}(),;])|(?<=[{}(),;])");
         if (!s.hasNext()) Parser.fail("No code provided for parser to parse.", s);
-        return Program.parse(s);
+        return ProgramRoot.parse(s);
     }
 
     //----------------------------------------------------------------
