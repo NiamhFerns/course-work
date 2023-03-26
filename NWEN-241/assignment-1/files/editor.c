@@ -134,6 +134,7 @@ void editor_view(int rows, int cols, char viewing_buffer[rows][cols],
     // Insert char at the current location.
     int pos = 0;
     for (int y = 0; y < rows && pos < editing_buflen - 1; ++y) {
+        // Break the loop only if you reach the end of the editing_buffer or if the line is wrapped.
         for (int x = 0; (!wrap || x < cols - 1) && pos < editing_buflen - 1; ++x, ++pos) {
             // If we find a newline, just break and continue on the line and skip the character insertion part.
             if (editing_buffer[pos] == '\n') {
@@ -147,13 +148,3 @@ void editor_view(int rows, int cols, char viewing_buffer[rows][cols],
         }
     }
 }
-
-// int main (int argc, char *argv[])
-// {
-//     char* editing_buffer = malloc(sizeof(char) * 21);
-//     strcpy(editing_buffer, "The quick brown fox");
-//
-//     editor_replace_str(editing_buffer, 21, "brown", "blue", 0);
-//
-//     return 0;
-// }
