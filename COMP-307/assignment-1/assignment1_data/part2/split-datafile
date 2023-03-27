@@ -1,0 +1,60 @@
+#!/bin/sh
+#######################################################
+#						      #
+#     Split data file into training and test set      #
+#     arguments are				      #
+#          base file name,			      #
+#          number of instances for training file      #
+#          suffix for naming the training/test files  #
+#						      #
+#     assumes that the data file is <base>.dat	      #
+#     and that the first two lines are header         #
+#######################################################
+
+SHUF="shuf"
+if [ `uname` = "NetBSD" ]; then
+  SHUF="shuffle -f -"
+fi
+
+if [ "$1" = "" ] ; then
+   echo "usage split-datafile filebasename size-of-training [suffix]"
+   exit
+fi
+
+if [ ! -e "$1.dat" ] ; then 
+   echo $1.dat does not exist
+   exit
+fi
+
+if [ "$2" = "" ] ; then
+   echo "usage split-datafile filebasename size-of-training [suffix]"
+   echo "must specify the number of instances for training set (up to $(wc -l $1.dat))"
+   exit
+fi
+
+if [ $2 -gt $(($(wc -l $1.dat|awk '{ print $1; }')-2)) ] ; then
+   echo "usage split-datafile filebasename size-of-training \[suffix\]"
+   echo only $(($(wc -l $1.dat|awk '{ print $1; }')-2)) instances in training set
+   exit
+fi
+
+if [ "$3" = "" ] ; then
+   suffix=""
+else
+   suffix="-$3"
+fi
+
+tempdata="/tmp/$$.$1"
+
+cat $1.dat |tail -n +3 |$SHUF > $tempdata
+
+head -2 $1.dat > $1-training${suffix}.dat
+head -$2 $tempdata >> $1-training${suffix}.dat
+
+head -2 $1.dat > $1-test${suffix}.dat
+tail -n +$(($2+1)) $tempdata >> $1-test${suffix}.dat
+
+rm $tempdata
+
+echo created $1-training${suffix}.dat and $1-test${suffix}.dat
+

@@ -1,0 +1,15 @@
+Class Cloudy Raining Hot Cold Humid Windy
+PlayGolf true false false true false true
+StayHome true true false true false true
+PlayGolf true true false true false false
+PlayGolf false false false true false false
+PlayGolf false false false true false false
+PlayGolf true true false false true false
+StayHome true true false false false true
+StayHome false false false false true false
+PlayGolf true false false false true true
+PlayGolf true true false false false false
+PlayGolf false false false false false true
+StayHome false false true false true true
+PlayGolf true false true false false false
+PlayGolf true false true false false false
