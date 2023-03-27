@@ -1,5 +1,8 @@
 .ccls*
 .idea/
+.nvimproj
 out/
+target/
+build/
 */159261/game-assignment-2/
 159261/game-assignment-2/
