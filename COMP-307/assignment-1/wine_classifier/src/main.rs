@@ -158,47 +158,30 @@ mod knn_model {
 
         // Test the accuracy of our model at k.
         pub fn test(&self) {
-            let mut predictions: Vec<(u32, &Instance)> = Vec::new();
-
+            println!("{}", &self);
+            
             // Iterate over each testing instance, find the distance to all elements and then take
             // the lowest k of them.
-            for instance in &self.testing_data {
-                // let mut distances = self
-                //     .training_data
-                //     .iter()
-                //     .map(|target| -> (f64, &Instance) {
-                //         (self.find_distance(instance, target), target)
-                //     })
-                //     .collect::<Vec<(f64, &Instance)>>();
-                //
-                // distances.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
-                //
-                // // Retreive a vector of the counts for each class up to the class count.
-                // let mut counts: Vec<(u32, usize)> = Vec::new();
-                // for i in 1..self.class_count + 1 {
-                //     counts.push((
-                //         i,
-                //         *&distances[..self.k_value]
-                //             .iter()
-                //             .filter(|(_, instance)| instance.class == i)
-                //             .count(),
-                //     ))
-                // }
-                //
-                // // Sort it and push this instance plus alongside the class with the highest count
-                // // (the end of the counts vector).
-                // counts.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
-                predictions.push((
-                    self.classify_instance(instance),
-                    // counts
-                    //     .last()
-                    //     .expect("Tried to push a prediction without any valid classes.")
-                    //     .0,
-                    instance,
-                ));
-            }
+            let predictions = self
+                .testing_data
+                .iter()
+                .map(|instance| -> (u32, &Instance) {
+                    (self.classify_instance(instance), instance)
+                })
+                .collect::<Vec<(u32, &Instance)>>();
 
-            println!("{}", &self);
+            let prediction_accuracy = predictions.len()
+                / predictions
+                    .iter()
+                    .filter(|(class, instance)| *class == instance.class)
+                    .count();
+
+            print!("\nPredicted Results:");
+            for prediction in &predictions {
+                println!("\nPredicted Class: {} Actual {}", prediction.0, prediction.1)
+            }
+            println!("\nPREDICTION ACCURACY: {}", prediction_accuracy);
+
         }
     }
 
