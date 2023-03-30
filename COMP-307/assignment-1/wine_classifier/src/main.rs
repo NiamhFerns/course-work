@@ -2,7 +2,7 @@ use std::env::args;
 
 mod knn_model {
     use core::fmt;
-    use std::{fs, collections::HashMap};
+    use std::{collections::HashMap, fs};
 
     // Input features and class for a nominal instance in a knn classifier model.
     #[derive(Debug)]
@@ -27,7 +27,6 @@ mod knn_model {
     pub struct Model {
         model_name: String,
         k_value: usize,
-        class_count: u32,
         training_data: Vec<Instance>,
         testing_data: Vec<Instance>,
         feature_bounds: Vec<(f64, f64)>,
@@ -82,20 +81,14 @@ mod knn_model {
                 .iter()
                 .zip(&b.input_features)
                 .zip(&self.feature_bounds)
-                .map(|((a, b), (max, min))| -> f64 { ((a + b).powi(2)) / (max - min) })
+                .map(|((a, b), (max, min))| -> f64 { (a - b).powi(2)  / (max - min).powi(2)})
                 .sum::<f64>()
                 .sqrt()
         }
 
         // Trains a kNN model by retreiving all the instances needed for the training data as well
         // as any testing instances needed.
-        pub fn train(
-            model_name: &str,
-            training: &str,
-            testing: &str,
-            k_value: usize,
-            class_count: u32,
-        ) -> Model {
+        pub fn train(model_name: &str, training: &str, testing: &str, k_value: usize) -> Model {
             /*
              * Input features read in in order of the Instance struct's members.
              * 14th value is the class of that instance.
@@ -116,7 +109,6 @@ mod knn_model {
             Model {
                 model_name: String::from(model_name),
                 k_value,
-                class_count,
                 training_data,
                 testing_data,
                 feature_bounds,
@@ -140,9 +132,12 @@ mod knn_model {
                 *class_counts.entry(target.class).or_default() += 1;
             }
 
-            let class_counts = class_counts.keys().fold(1, |current, next| -> u32 { 0 });
+            let mut class_counts = class_counts.into_iter().collect::<Vec<(u32, u32)>>();
+            
 
-            class_counts
+            class_counts.sort_by(|(_, a), (_, b)| a.partial_cmp(&b).unwrap());
+
+            class_counts.last().expect("There were no classes for this data.").0
         }
 
         // Test the accuracy of our model at k.
@@ -213,7 +208,7 @@ fn main() {
     if args.len() < 3 {
         panic!("Must include training and testing data.")
     };
-    let model = knn_model::Model::train("Wine Classification", &args[1], &args[2], 3, 3);
+    let model = knn_model::Model::train("Wine Classification", &args[1], &args[2], 7);
 
     model.test();
 }
