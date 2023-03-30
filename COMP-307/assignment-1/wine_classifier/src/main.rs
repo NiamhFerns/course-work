@@ -2,10 +2,10 @@ use std::env::args;
 
 mod knn_model {
     use core::fmt;
-    use std::fs;
+    use std::{fs, collections::HashMap};
 
     // Input features and class for a nominal instance in a knn classifier model.
-    #[derive(Default)]
+    #[derive(Debug)]
     struct Instance {
         input_features: Vec<f64>,
         class: u32,
@@ -135,31 +135,20 @@ mod knn_model {
 
             distances.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
 
-            // Retreive a vector of the counts for each class up to the class count.
-            let mut counts: Vec<(u32, usize)> = Vec::new();
-            for i in 1..self.class_count + 1 {
-                counts.push((
-                    i,
-                    distances[..self.k_value]
-                        .iter()
-                        .filter(|(_, instance)| instance.class == i)
-                        .count(),
-                ));
+            let mut class_counts: HashMap<u32, u32> = HashMap::new();
+            for (_, target) in &distances[..self.k_value] {
+                *class_counts.entry(target.class).or_default() += 1;
             }
 
-            // Sort it and push this instance plus alongside the class with the highest count
-            // (the end of the counts vector).
-            counts.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
-            counts
-                .last()
-                .expect("Tried to push a prediction without any valid classes.")
-                .0
+            let class_counts = class_counts.keys().fold(1, |current, next| -> u32 { 0 });
+
+            class_counts
         }
 
         // Test the accuracy of our model at k.
         pub fn test(&self) {
             println!("{}", &self);
-            
+
             // Iterate over each testing instance, find the distance to all elements and then take
             // the lowest k of them.
             let predictions = self
@@ -170,18 +159,23 @@ mod knn_model {
                 })
                 .collect::<Vec<(u32, &Instance)>>();
 
-            let prediction_accuracy = predictions.len()
-                / predictions
-                    .iter()
-                    .filter(|(class, instance)| *class == instance.class)
-                    .count();
+            let success_count = predictions
+                .iter()
+                .filter(|(class, instance)| *class == instance.class)
+                .count();
 
-            print!("\nPredicted Results:");
+            let prediction_accuracy = success_count as f64 / predictions.len() as f64;
+
+            println!("\nPredicted Results:");
             for prediction in &predictions {
-                println!("\nPredicted Class: {} Actual {}", prediction.0, prediction.1)
+                println!("Predicted Class: {} Actual {}", prediction.0, prediction.1)
             }
-            println!("\nPREDICTION ACCURACY: {}", prediction_accuracy);
-
+            println!(
+                "\n{}/{} Correct --- PREDICTION ACCURACY: {}",
+                success_count,
+                predictions.len(),
+                prediction_accuracy
+            );
         }
     }
 
@@ -206,9 +200,9 @@ mod knn_model {
                 "Model \"{}\" at k={}\nTraining Instances:\n{}\n\nTesting Instances:\n{}\n\nBounds:{}",
                 self.model_name,
                 self.k_value,
-                &training[1..],
-                &testing[1..],
-                &bounds[1..]
+                &training[1..], // Ignore the first new line character in the string.
+                &testing[1..],  // |
+                &bounds[1..]    // |
             )
         }
     }
