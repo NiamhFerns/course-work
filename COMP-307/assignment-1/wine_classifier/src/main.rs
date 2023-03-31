@@ -2,7 +2,7 @@ use std::env::args;
 
 mod knn_model {
     use core::fmt;
-    use std::{collections::HashMap, fs};
+    use std::{collections::HashMap, fs, path::Path};
 
     // Input features and class for a nominal instance in a knn classifier model.
     #[derive(Debug)]
@@ -94,9 +94,9 @@ mod knn_model {
              * 14th value is the class of that instance.
              */
             let training_input =
-                fs::read_to_string(training).expect("Failed to read in file for training values.");
+                fs::read_to_string(Path::new(format!("{}", training).as_str())).expect("Failed to read in file for training values.");
             let testing_input =
-                fs::read_to_string(testing).expect("Failed to read in file for training values.");
+                fs::read_to_string(Path::new(format!("{}", testing).as_str())).expect("Failed to read in file for training values.");
 
             let training_input: Vec<_> = training_input.trim_end().split("\n").collect();
             let testing_input: Vec<_> = testing_input.trim_end().split("\n").collect();
