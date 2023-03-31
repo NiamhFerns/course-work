@@ -15,11 +15,11 @@ mod knn_model {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
             let mut s = String::new();
 
-            for feature in &self.input_features {
+            for feature in &self.input_features[..3] {
                 s.push_str(&format!("{}{}", ", ", &feature.to_string()));
             }
 
-            write!(f, "Class: \"{}\" Input Features: {}", &self.class, &s[2..])
+            write!(f, "Class: \"{}\" Input Features: {}, [{} more...]", &self.class, &s[2..], self.input_features.len() - 3)
         }
     }
 
