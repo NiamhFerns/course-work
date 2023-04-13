@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+    <children>
+        <VBox fx:id="vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0">
+            <children>
+                <GridPane alignment="center" hgap="10" vgap="10">
+                    <children>
+                        <Label fx:id="Walking" text="%walking" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="RIGHT" />
+                        <Button fx:id="Quit" alignment="center" onAction="#handleQuit" prefHeight="25.0" prefWidth="60.0" text="%quit" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+                        <TextField fx:id="walkingDistance_tf" onAction="#handleWalkingDistance" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="0"></TextField>
+                        <Slider fx:id="walkingDistance_sl" onValueChange="#handleWalkingDistanceSlider" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <Label fx:id="Start" text="%start" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.halignment="RIGHT" />
+                        <Label fx:id="Goal" alignment="CENTER_RIGHT" text="%goal" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+
+                        <TextField fx:id="startText" onAction="#handleStartAction" onKeyReleased="#handleStartKey" prefWidth="200" promptText="Search Start" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                        <TextField fx:id="goalText" onAction="#handleGoalAction" onKeyReleased="#handleGoalKey" prefWidth="200" promptText="Search Goal" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                        <Button fx:id="connectedComponents_bt" mnemonicParsing="false" onAction="#handleShowConnectedComponents" text="%components" prefWidth="130.0" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+                        <Button fx:id="articulationPoints_bt" mnemonicParsing="false" onAction="#handleShowArticulationPoints" text="%articulationpoints" prefWidth="130.0" GridPane.columnIndex="4" GridPane.rowIndex="1"/> 
+
+                        <Button fx:id="english_bt" alignment="center" onAction="#handleEnglish" prefHeight="25.0" prefWidth="130.0" text="%English" GridPane.columnIndex="5" GridPane.rowIndex="0" />
+                        <Button fx:id="maori_bt" alignment="center" onAction="#handleMaori" prefHeight="25.0" prefWidth="130.0" text="%Maori" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                    </children>
+                    <columnConstraints>
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                    </rowConstraints>
+                </GridPane>
+                <Canvas fx:id="mapCanvas" height="500.0" onMouseClicked="#handleMouseClick" onMouseDragged="#handleMouseDrag" onMousePressed="#handleMousePressed" onScroll="#mouseScroll" width="800" />
+
+            </children>
+        </VBox>
+        <TextArea fx:id="lineText" prefHeight="150.0" prefWidth="800.0" />
+    </children>
+</VBox>
