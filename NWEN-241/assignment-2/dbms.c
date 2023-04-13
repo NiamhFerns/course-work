@@ -48,6 +48,7 @@ int db_remove_row(struct db_table* db, unsigned long id)
     if (db->rows_used <= 0) {
         db->rows_total = 0;
         free(db->table);
+        db->table = NULL;
         return 1;
     }
 
