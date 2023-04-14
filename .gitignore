@@ -1,5 +1,7 @@
-.ccls*
+*.ccls
 .idea/
+.idea/*
+*.iml
 .nvimproj
 out/
 target/

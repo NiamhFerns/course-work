@@ -6,6 +6,10 @@
  */
 
 public class PathItem implements Comparable<PathItem> {
+    @Override
+    public int compareTo(PathItem pathItem) {
+        return 0;
+    }
 
     // TODO
 
