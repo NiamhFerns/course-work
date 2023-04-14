@@ -10,9 +10,9 @@ int db_show_row(const struct db_table* db, unsigned int row)
     if (row > db->rows_used)
         return 0;
 
-    struct album instance = db->table[row];
+    struct album *instance = &db->table[row];
 
-    printf("%6lu:%20.20s:%20.20s:%-4.4d\n", instance.id, instance.title, instance.artist, instance.year);
+    printf("%6lu:%20.20s:%20.20s:%-4.4d\n", instance->id, instance->title, instance->artist, instance->year);
     return 1;
 }
 
@@ -26,7 +26,7 @@ int db_add_row(struct db_table* db, struct album* a)
         db->rows_total += 5;
     }
 
-
+    // We have to copy here because table is an array of albums not an array of pointers to albums.
     db->table[db->rows_used] = *a;
     db->rows_used++;
 
