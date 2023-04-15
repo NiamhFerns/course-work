@@ -3,6 +3,7 @@
 .idea/*
 *.iml
 .nvimproj
+a.out
 out/
 target/
 build/
