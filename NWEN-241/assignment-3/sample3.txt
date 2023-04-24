@@ -1,0 +1,7 @@
+The Three Laws of Thermodynamics 
+The First Law:
+        You can't get anything without working for it.
+The Second Law:
+        The most you can accomplish by working is to break even.
+The Third Law:
+        You can only break even at absolute zero.
