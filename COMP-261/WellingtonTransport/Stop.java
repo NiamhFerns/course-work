@@ -77,9 +77,13 @@ public class Stop implements Comparable<Stop> {
 
     /**
      * Compare by alphabetic order of name,
+     * If two stops have the same name, then
+     * compare their id's in case they are not the same stop.
      */
     public int compareTo(Stop other){
-        return this.name.compareTo(other.name);
+        int ans = this.name.compareTo(other.name);
+        if (ans!=0) {return ans;}
+        return this.id.compareTo(other.id);
     }
 
 

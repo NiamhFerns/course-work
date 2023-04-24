@@ -7,20 +7,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 
+
 //=============================================================================
 //   TODO   Finding Articulation Points
-//   Finds all the articulation points in the undirected graph, without walking edges
-//   Labels each stop with the number of the subgraph it is in
-//   sets the subGraphCount of the graph to the number of subgraphs.
+//   Finds and returns a collection of all the articulation points in the undirected
+//   graph, without walking edges
 //=============================================================================
 
 public class ArticulationPoints{
 
-    // Based on....
+    // Use the algorithm from the lectures, but you will need a loop to check through
+    // all the Stops in the graph to find any Stops which were not connected to the
+    // previous Stops, and apply the lecture slide algorithm starting at each such stop.
 
-    // Returns the collection of nodes that are articulation points 
-    // in the UNDIRECTED graph with no walking edges.
-    // 
     public static Collection<Stop> findArticulationPoints(Graph graph) {
         System.out.println("calling findArticulationPoints");
         graph.computeNeighbours();   // To ensure that all stops have a set of (undirected) neighbour stops

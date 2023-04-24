@@ -15,7 +15,7 @@ import java.util.HashSet;
  * The Graph constructor is passed a Map of the stops, indexed by stopId and
  *  a Map of the Lines, indexed by lineId.
  * The Stops in the map have their id, name and GIS location.
- * The Lines in the map have their id, and lists of the stopIDs an times (in order)
+ * The Lines in the map have their id, and lists of the stopIDs and times (in order)
  *
  * To build the actual graph structure, it is necessary to
  *  build the list of Edges out of each stop and the list of Edges into each stop
@@ -29,7 +29,7 @@ public class Graph {
     private Collection<Line> lines;
     private Collection<Edge> edges = new HashSet<Edge>();      // edges between Stops
 
-    private int numComponents = 0;     // number of connected subgraphs (graph components)
+    private int numComponents = 0;     // number of connected sub-graphs (graph components)
 
     /**
      * Construct a new graph given a collection of stops and a collection of lines.
@@ -74,7 +74,46 @@ public class Graph {
      * - Construct the forward and backward neighbour edges of each Stop.
      */
     private void createAndConnectEdges() {
-        // TODO
+        for (var line : lines) {
+            var lineType = line.getType();
+
+            var stops = line.getStops();
+            var times = line.getTimes();
+
+            // This is safe because we don't add backwards edges on i = 0.
+            double time = 0;
+            double dist = 0;
+            Edge edge = null;
+
+            // Add all the intermediary edges.
+            for (int i = 0; i < stops.size(); ++i) {
+                // Backward edges.
+                if (i > 0) {
+                    stops.get(i).addBackwardEdge(edge);
+                    edges.add(edge);
+                }
+
+                // Forward edges.
+                if (i < stops.size() - 1) {
+                    time = times.get(i + 1) - times.get(i);
+                    dist = stops.get(i).distanceTo(stops.get(i + 1));
+
+                    // We reassign the next edge after it is included as a backward edge.
+                    edge = new Edge(
+                            stops.get(i),
+                            stops.get(i + 1),
+                            lineType,
+                            line,
+                            time,
+                            dist
+                    );
+
+                    stops.get(i).addForwardEdge(edge);
+                    edges.add(edge);
+                }
+
+            }
+        }
 
 
 
@@ -87,9 +126,12 @@ public class Graph {
      * It may assume that there are no walking edges at this point.
      */
     public void computeNeighbours(){
-        // TODO
-
-
+        for (var stop : stops) {
+            for (var neighbour : stop.getForwardEdges())
+                stop.addNeighbour(neighbour.toStop());
+            for (var neighbour : stop.getBackwardEdges())
+                stop.addNeighbour(neighbour.fromStop());
+        }
     }
 
     //=============================================================================
@@ -101,15 +143,34 @@ public class Graph {
      * based on the specified walkingDistance:
      * identify all pairs of stops * that are at most walkingDistance apart,
      * and construct edges (both ways) between the stops
-     * add the edges to the forward and backward neighbouars of the Stops
+     * add the edges to the forward and backward neighbours of the Stops
      * add the edges to the walking edges of the graph.
      * Assume that all the previous walking edges have been removed
      */
     public void recomputeWalkingEdges(double walkingDistance) {
+        // Reset Stuff
         int count = 0;
-        // TODO
+        removeWalkingEdges();
 
+        for (var stop : stops) {
+            for (var neighbour : stops) {
+                var distance = stop.distanceTo(neighbour);
+                if (Transport.MAX_WALKING_DISTANCE_M < distance || walkingDistance < distance) continue;
+                if (stop == neighbour) continue;
 
+                count++;
+                var edge = new Edge(
+                        stop,
+                        neighbour,
+                        Transport.WALKING,
+                        null,
+                        distance / Transport.WALKING_SPEED_MPS,
+                        stop.distanceTo(neighbour)
+                );
+                stop.addForwardEdge(edge);
+                edges.add(edge);
+            }
+        }
 
 
 
