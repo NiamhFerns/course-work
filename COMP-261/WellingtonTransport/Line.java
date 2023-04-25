@@ -3,13 +3,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Structure for holding information about a bus/train/ferry/cablecar line
+ * Structure for holding information about a bus/train/ferry/cable-car line
  */
 
 public class Line {
     
     private final String lineId;
-    private final String transpType;   // one of "bus", "train", "cablecar", "ferry"
+    private final String transpType;   // one of "bus", "train", "cable-car", "ferry"
 
     // paired lists with stop id and stop times.  need to make sure they remain in order
     private List<Stop> stops;
@@ -28,7 +28,7 @@ public class Line {
 
     /**
      * Add a stop to the end of the current line
-     * @param stopId the 4/5 digit stop id
+     * @param stop the 4/5 digit stop id
      * @param time  the time from the start of the line to the current stop
      */
     public void addStop(Stop stop, int time) {
