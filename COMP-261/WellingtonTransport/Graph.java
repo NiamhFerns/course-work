@@ -80,37 +80,30 @@ public class Graph {
             var stops = line.getStops();
             var times = line.getTimes();
 
-            // This is safe because we don't add backwards edges on i = 0.
             double time = 0;
             double dist = 0;
-            Edge edge = null;
+            Edge edge;
 
             // Add all the intermediary edges.
-            for (int i = 0; i < stops.size(); ++i) {
-                // Backward edges.
-                if (i > 0) {
-                    stops.get(i).addBackwardEdge(edge);
-                    edges.add(edge);
-                }
-
+            for (int i = 0; i < stops.size() - 1; ++i) {
                 // Forward edges.
-                if (i < stops.size() - 1) {
-                    time = times.get(i + 1) - times.get(i);
-                    dist = stops.get(i).distanceTo(stops.get(i + 1));
+                time = times.get(i + 1) - times.get(i);
+                dist = stops.get(i).distanceTo(stops.get(i + 1));
 
-                    // We reassign the next edge after it is included as a backward edge.
-                    edge = new Edge(
-                            stops.get(i),
-                            stops.get(i + 1),
-                            lineType,
-                            line,
-                            time,
-                            dist
-                    );
+                // We reassign the next edge after it is included as a backward edge.
+                edge = new Edge(
+                        stops.get(i),
+                        stops.get(i + 1),
+                        lineType,
+                        line,
+                        time,
+                        dist
+                );
 
-                    stops.get(i).addForwardEdge(edge);
-                    edges.add(edge);
-                }
+                // Backward edges.
+                stops.get(i).addForwardEdge(edge);
+                stops.get(i + 1).addBackwardEdge(edge);
+                edges.add(edge);
 
             }
         }
@@ -168,6 +161,7 @@ public class Graph {
                         stop.distanceTo(neighbour)
                 );
                 stop.addForwardEdge(edge);
+                stop.addBackwardEdge(edge);
                 edges.add(edge);
             }
         }
@@ -243,6 +237,10 @@ public class Graph {
     public void setSubGraphCount(int num) {
         numComponents = num;
         if (num==0){ resetSubGraphIds(); }
+    }
+
+    public void incrementSubGraphCount() {
+        numComponents++;
     }
 
     /**

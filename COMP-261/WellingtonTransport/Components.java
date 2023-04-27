@@ -1,9 +1,4 @@
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 //=============================================================================
 //   TODO   Finding Components
@@ -30,14 +25,36 @@ public class Components{
         System.out.println("calling findComponents");
         graph.resetSubGraphIds();
 
+        ArrayList<Stop> stopList = new ArrayList<>();
+        HashSet<Stop> visited = new HashSet<>();
 
+        // Add to list.
+        for (var stop : graph.getStops()) {
+            if (visited.contains(stop)) continue;
+            Components.forwardVisit(stop, stopList, visited);
+        }
 
-
-
-
-
-
+        // Find components.
+        Collections.reverse(stopList);
+        for (var stop : stopList) {
+            if (stop.getSubGraphId() != -1) continue;
+            backwardVisit(stop, graph.getSubGraphCount());
+            graph.incrementSubGraphCount();
+        }
     }
 
+    private static void forwardVisit(Stop stop, ArrayList<Stop> stopList, HashSet<Stop> visited) {
+        if (visited.contains(stop)) return;
+        visited.add(stop);
+        for (var nEdge : stop.getForwardEdges())
+            forwardVisit(nEdge.toStop(), stopList, visited);
+        stopList.add(stop);
+    }
 
+    private static void backwardVisit(Stop stop, int componentNumber) {
+        if (stop.getSubGraphId() != -1) return;
+        stop.setSubGraphId(componentNumber);
+        for (var nEdge : stop.getBackwardEdges())
+            backwardVisit(nEdge.fromStop(), componentNumber);
+    }
 }
