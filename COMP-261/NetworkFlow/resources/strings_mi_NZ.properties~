@@ -1,0 +1,16 @@
+title = Pekanga
+load = Utaina
+quit = Waiho
+search = Kimihia:
+node = Tiriwā 
+up = ki runga
+down = ki raro
+left = ki maui
+right = ki tika
+start = timata
+goal = ūnga
+components = wae
+walking = haere
+English = English
+Maori = Māori
+articulationpoints = Pūtahitanga

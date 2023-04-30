@@ -18,7 +18,7 @@ public class GisPoint {
      * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters
      * el2 End altitude in meters
      * 
-     * @return Distance in meters between two GPS points with elevation
+     * @returns Distance in meters between two GPS points with elevation
      * 
      */
     public static double distance(double lat1, double lat2, double lon1,
@@ -81,7 +81,7 @@ public class GisPoint {
 
     /**
      * 
-     * @return Distance in Meters
+     * @returns Distance in Meters
      */
     public double distance(double lon2, double lat2) {
         return GisPoint.distance(this.lat, lat2, this.lon, lon2, 0.0, 0.0); // operating without elevation
@@ -90,7 +90,7 @@ public class GisPoint {
     /**
      * .
      * 
-     * @return Distance in Meters
+     * @returns Distance in Meters
      */
     public double distance(GisPoint loc) {
         return GisPoint.distance(this.lat, loc.lat, this.lon, loc.lon, 0.0, 0.0);

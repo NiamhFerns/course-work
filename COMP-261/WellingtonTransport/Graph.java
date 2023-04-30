@@ -1,13 +1,5 @@
 import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.HashSet;
+import java.util.*;
 
 
 /**
@@ -89,8 +81,6 @@ public class Graph {
                 // Forward edges.
                 time = times.get(i + 1) - times.get(i);
                 dist = stops.get(i).distanceTo(stops.get(i + 1));
-
-                // We reassign the next edge after it is included as a backward edge.
                 edge = new Edge(
                         stops.get(i),
                         stops.get(i + 1),
@@ -104,12 +94,8 @@ public class Graph {
                 stops.get(i).addForwardEdge(edge);
                 stops.get(i + 1).addBackwardEdge(edge);
                 edges.add(edge);
-
             }
         }
-
-
-
     }
 
     /** 
@@ -152,17 +138,32 @@ public class Graph {
                 if (stop == neighbour) continue;
 
                 count++;
-                var edge = new Edge(
+
+                // Forward edge.
+                var oEdge = getBackwardEdge(neighbour, stop, Transport.WALKING);
+                var edge = oEdge.orElse(new Edge(
                         stop,
                         neighbour,
                         Transport.WALKING,
                         null,
                         distance / Transport.WALKING_SPEED_MPS,
                         stop.distanceTo(neighbour)
-                );
+                ));
                 stop.addForwardEdge(edge);
+                if (oEdge.isEmpty()) edges.add(edge);
+
+                // Backward edge.
+                oEdge = getForwardEdge(neighbour, stop, Transport.WALKING);
+                edge = oEdge.orElse(new Edge(
+                        neighbour,
+                        stop,
+                        Transport.WALKING,
+                        null,
+                        distance / Transport.WALKING_SPEED_MPS,
+                        stop.distanceTo(neighbour)
+                ));
                 stop.addBackwardEdge(edge);
-                edges.add(edge);
+                if (oEdge.isEmpty()) edges.add(edge);
             }
         }
 
@@ -253,8 +254,31 @@ public class Graph {
         numComponents = 0;
     }
 
+    /**
+     * Find a specific forward edge.
+     * @param neighbour the stop to find the edge from
+     * @param stop the stop to find the edge to.
+     * @param type the type of edge
+     * @return an optional of the edge
+     */
+    public Optional<Edge> getForwardEdge(Stop neighbour, Stop stop, String type) {
+        for (var edge : neighbour.getForwardEdges()) {
+            if (edge.toStop() == stop && edge.transpType().equals(type)) return Optional.of(edge);
+        }
+        return Optional.empty();
+    }
 
-
-
-
+    /**
+     * Find a specific backward edge.
+     * @param neighbour the stop to find the edge from
+     * @param stop the stop to find the edge to.
+     * @param type the type of edge
+     * @return an optional of the edge
+     */
+    public Optional<Edge> getBackwardEdge(Stop neighbour, Stop stop, String type) {
+        for (var edge : neighbour.getBackwardEdges()) {
+            if (edge.toStop() == stop && edge.transpType().equals(type)) return Optional.of(edge);
+        }
+        return Optional.empty();
+    }
 }

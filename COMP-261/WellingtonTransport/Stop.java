@@ -23,8 +23,8 @@ public class Stop implements Comparable<Stop> {
     // data structure for holding the set of (undirected) neighbours (stops) connected to this stop
     private Set<Stop> neighbours = new HashSet<Stop>();
 
-    //Field to record the different sub-graphs
-    private int subGraphId = -1; // used to denote which subgraph the stop belongs to. -1 to indicate no sub-graphs yet.
+    //Field to record the different subgraphs
+    private int subGraphId = -1; // used to denote which subgraph the stop belongs to. -1 to indicate no subgraphs yet.
 
 
     /**
@@ -32,8 +32,8 @@ public class Stop implements Comparable<Stop> {
      * 
      * @param id   4 or 5 digit stop id
      * @param name Long name for the stop
-     * @param lat Latitude for the stop
-     * @param lon Longitude for the stop
+     * @param lat
+     * @param lon
      */
     public Stop(double lon, double lat, String name, String id) {
         this.loc = new GisPoint(lon, lat);
@@ -97,7 +97,7 @@ public class Stop implements Comparable<Stop> {
     }
 
     /**
-     * @param point GisPoint to check if the stop is in an **identical** location
+     * @param a GisPoint to check if the stop is in an **identical** location
      * @return is this stop in the same location as the given point
      */
     public boolean atLocation(GisPoint point) {
@@ -111,7 +111,7 @@ public class Stop implements Comparable<Stop> {
 
     /**
      * adding a line that goes through this stop
-     * @param line line to be added.
+     * @param line
      */
     public void addLine(Line line) {
         this.lines.add(line);
@@ -173,11 +173,11 @@ public class Stop implements Comparable<Stop> {
     }
 
     //--------------------------------------------
-    // fields and methods for finding connected components / sub-graphs.
+    // fields and methods for finding connected components / subgraphs.
     //--------------------------------------------
     
     /** 
-     * @param id the id of the graph so stops in the game subgraph can be drawn in the same colour or highlighted
+     * @param subGraphId the id of the graph so stops in the game subgraph can be drawn in the same colour or highlighted
      */
     public void setSubGraphId(int id) {
         this.subGraphId = id;

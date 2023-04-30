@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=EdmondKarp
+comment0.text=\ Edmond\ karp\ algorithm\ to\ find\ augmentation\ paths\ and\ network\ flow.\r\n\ \r\n\ This\ would\ include\ building\ the\ supporting\ data\ structures\:\r\n\ \r\n\ a)\ Building\ the\ residual\ graph(that\ includes\ original\ and\ backward\ (reverse)\ edges.)\r\n\ \ \ \ \ -\ maintain\ a\ map\ of\ Edges\ where\ for\ every\ edge\ in\ the\ original\ graph\ we\ add\ a\ reverse\ edge\ in\ the\ residual\ graph.\r\n\ \ \ \ \ -\ The\ map\ of\ edges\ are\ set\ to\ include\ original\ edges\ at\ even\ indices\ and\ reverse\ edges\ at\ odd\ indices\ (this\ helps\ accessing\ the\ corresponding\ backward\ edge\ easily)\r\n\ \ \ \ \ \r\n\ \ \ \ \ \r\n\ b)\ Using\ this\ residual\ graph,\ for\ each\ city\ maintain\ a\ list\ of\ edges\ out\ of\ the\ city\ (this\ helps\ accessing\ the\ neighbours\ of\ a\ node\ (both\ original\ and\ reverse))\r\n\r\n\ The\ class\ finds\ \:\ augmentation\ paths,\ their\ corresponing\ flows\ and\ the\ total\ flow\r\n\ \r\n\ \r\n
+comment1.params=graph
+comment1.target=void\ computeResidualGraph(Graph)
+comment2.params=graph
+comment2.target=void\ printResidualGraphData(Graph)
+comment3.params=id
+comment3.target=Edge\ getEdge(java.lang.String)
+comment3.text=\r\n\ Return\ the\ corresonding\ edge\ for\ a\ given\ key\r\n
+comment4.params=graph\ from\ to
+comment4.target=java.util.ArrayList\ calcMaxflows(Graph,\ City,\ City)
+comment4.text=\ find\ maximum\ flow\r\n\ \r\n
+comment5.params=graph\ s\ t
+comment5.target=javafx.util.Pair\ bfs(Graph,\ City,\ City)
+numComments=6

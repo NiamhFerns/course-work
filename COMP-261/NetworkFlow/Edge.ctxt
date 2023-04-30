@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=Edge
+comment0.text=\r\n\ A\ directed\ edge\ in\ the\ graph,\ with\ associated\ data.\r\n\ fromCity\ and\ toCity\ are\ the\ Cityies\ at\ the\ beginning\ and\ end\ of\ the\ edge\r\n\ transpType\ is\ a\ String\ (as\ defined\ in\ the\ Transport\ class)\ specifying\ the\ type\ of\ edge\r\n\ capacity\ is\ the\ capacity\ it\ takes\ to\ travel\ this\ edge\r\n\ flow\ is\ the\ flow\ along\ the\ edge.\r\n\r\n
+comment1.params=fromCity\ toCity\ transpType\ capacity\ flow
+comment1.target=Edge(City,\ City,\ java.lang.String,\ int,\ int)
+comment2.params=
+comment2.target=City\ fromCity()
+comment3.params=
+comment3.target=City\ toCity()
+comment4.params=
+comment4.target=java.lang.String\ transpType()
+comment5.params=
+comment5.target=int\ capacity()
+comment6.params=
+comment6.target=int\ flow()
+comment7.params=f
+comment7.target=void\ setFlow(int)
+comment8.params=c
+comment8.target=void\ setCapacity(int)
+comment9.params=
+comment9.target=java.lang.String\ toString()
+numComments=10

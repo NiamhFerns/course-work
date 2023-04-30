@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=Main
+comment1.params=primaryStage
+comment1.target=void\ start(javafx.stage.Stage)
+comment2.params=locale
+comment2.target=void\ setLocale(java.util.Locale)
+comment3.params=
+comment3.target=void\ reload()
+comment4.params=args
+comment4.target=void\ main(java.lang.String[])
+numComments=5

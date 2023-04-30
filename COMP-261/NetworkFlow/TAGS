@@ -1,0 +1,308 @@
+
+AStar.java,335
+public class AStar 27,534
+    private static String timeOrDistance 41,1065
+    public static double heuristic(47,1269
+    public static double edgeCost(53,1541
+    public static List<Edge> findShortestPath(62,1797
+    private static ArrayList<Stop> makeStopPath(211,8176
+    private static ArrayList<Edge> makeEdgePath(227,8778
+
+ArticulationPoints.java,125
+public class ArticulationPoints{ArticulationPoints17,626
+    public static Collection<Stop> findArticulationPoints(24,812
+
+Components.java,186
+public class Components{Components15,533
+    public static void findComponents(25,1051
+    private static void visitAllConnections(50,1926
+    public static void assignRoot(62,2344
+
+Controller.java,2595
+public class Controller 36,915
+    public Graph graph;39,1024
+    public Zoning zoneData;41,1049
+    private TextField startText;46,1142
+    private TextField goalText;48,1185
+    private Label Start;50,1227
+    private Label Goal;52,1262
+    private Label Walking;54,1296
+    private Button Quit;56,1333
+    private Button english_bt;58,1368
+    private Button maori_bt;60,1409
+    private Canvas mapCanvas;62,1448
+    private Label nodeDisplay;64,1488
+    private TextArea lineText;66,1529
+    private CheckBox walking_ch;69,1571
+    private Button connectedComponents_bt;71,1614
+    private Button articulationPoints_bt;73,1667
+    private Slider walkingDistance_sl;75,1719
+    private TextField walkingDistance_tf;77,1768
+    private double scale 80,1876
+    private static final double ratioLatLon 81,1945
+    private GisPoint mapOrigin 82,2045
+    private static final int STOP_SIZE 85,2135
+    private Stop startLocation;88,2224
+    private Stop goalLocation;89,2256
+    private Boolean dragActive 91,2337
+    private Collection<Stop> highlightNodes 94,2454
+    private List<Edge> pathEdges 97,2577
+    public void initialize(100,2681
+    public double getScale(116,3243
+    public GisPoint getOrigin(121,3321
+    public Canvas getMapCanvas(126,3409
+    public double getRatioLatLon(131,3498
+    public void handleLoad(136,3639
+    public void handleQuit(167,5007
+    public void handleEnglish(175,5293
+    public void handleMaori(185,5675
+    public void handleStartKey(194,5983
+    public void handleGoalKey(203,6457
+    public String stopNames(211,6961
+    public void handleStartAction(218,7255
+    public void handleGoalAction(232,7898
+    public void handleShowConnectedComponents(245,8491
+    public void handleShowArticulationPoints(258,9071
+    public void handleAddWalking(271,9678
+    public void handleWalkingDistance(282,10122
+    public void handleWalkingDistanceSlider(295,10743
+    public void mouseScroll(306,11311
+    public double dragStartX 315,11571
+    public double dragStartY 316,11605
+    public void handleMousePressed(318,11677
+    public void handleMouseDrag(325,11858
+    private Stop goalStop 340,12318
+    private Stop prevStartStop 341,12352
+    public void handleMouseClick(347,12492
+    public Stop findClosestStop(389,13945
+    public void highlightClosestStop(407,14492
+    public void drawGraph(420,14915
+    private void drawEdge(471,16756
+    public void drawStop(484,17249
+    public void drawPath(495,17644
+    public void drawFareZones(511,18111
+    public void reportPath(533,19068
+
+DataLoader.java,174
+public class DataLoader 21,545
+    public static Map<Map28,798
+    public static Map<String, Stop> loadStops(28,798
+    public static Collection<Line> loadLines(61,2243
+
+Edge.java,568
+public class Edge 13,564
+    private final Stop fromStop;15,585
+    private final Stop toStop;16,618
+    private final String transpType;18,654
+    private final Line line;19,692
+    private final double time;21,723
+    private final double distance;22,802
+    private final String toString;24,884
+    public Edge(26,974
+    public Stop fromStop(42,1601
+    public Stop toStop(43,1647
+    public String transpType(44,1689
+    public Line line(45,1741
+    public double time(46,1779
+    public double distance(47,1819
+    public String toString(49,1868
+
+GisPoint.java,643
+public class GisPoint 6,166
+    public final static double EARTH_CIRCUMFANCE 7,190
+    public final static double SCALE 8,270
+    private double lon;10,358
+    private double lat;11,411
+    public static double distance(25,1053
+    public GisPoint(43,1875
+    public GisPoint add(49,2014
+    public GisPoint add(53,2136
+    public void move(58,2296
+    public void move(63,2404
+    public GisPoint subtract(69,2569
+    public GisPoint subtract(73,2696
+    public String toString(79,2837
+    public double distance(87,2979
+    public double distance(96,3216
+    public double getLat(101,3363
+    public double getLon(106,3434
+
+Graph.java,772
+public class Graph 28,985
+    private Collection<Stop> stops;30,1007
+    private Collection<Line> lines;31,1043
+    private Collection<Edge> edges 32,1079
+    private int numComponents 34,1166
+    public Graph(39,1358
+    public void printGraphData(51,1715
+    private void createNeighboursAndEdges(74,2686
+    public void computeNeighbours(91,3421
+    public void recomputeWalkingEdges(109,4171
+    public void removeWalkingEdges(141,5578
+    public Collection<Stop> getStops(155,6161
+    public Collection<Edge> getEdges(161,6349
+    public Stop getFirstMatchingStop(169,6581
+    public List<Stop> getAllMatchingStops(182,6913
+    public int getSubGraphCount(192,7189
+    public void setSubGraphCount(195,7261
+    public void resetSubGraphIds(203,7442
+
+Line.java,428
+public class Line 9,133
+    private final String lineId;11,158
+    private final String transpType;12,191
+    private List<Stop> stops;15,378
+    private List<Double> times;16,408
+    public Line(29,724
+    public void addStop(42,1133
+    public String getId(47,1250
+    public String getType(51,1308
+    public String toString(56,1389
+    public List<Stop> getStops(65,1652
+    public List<Double> getTimes(72,1856
+
+Main.java,277
+public class Main 14,264
+    public static Stage stage;16,305
+    static ResourceBundle bundle;17,336
+    static Locale locale;18,370
+    public void start(20,410
+    public static void setLocale(33,816
+    public void reload(37,945
+    public static void main(50,1395
+
+PathItem.java,472
+public class PathItem 4,37
+    public final Stop stop;6,138
+    public final double cost;7,166
+    public final double costPlusEst;9,340
+    public final Stop prev;10,430
+    public final Edge edge;11,484
+    public PathItem(18,694
+    public PathItem(31,1078
+    public Stop getStop(41,1514
+    public Stop getPrev(42,1555
+    public double getCost(43,1596
+    public Edge getEdge(44,1639
+    public int compareTo(50,1806
+    public String toString(59,2163
+
+Projection.java,428
+public class Projection 8,132
+    public static Point2D model2Screen(17,387
+    public static GisPoint screen2Model(31,1105
+    private static Point2D model2Screen(43,1569
+    private static double model2ScreenX(49,1904
+    private static double model2ScreenY(54,2134
+    private static GisPoint Screen2Model(60,2431
+    private static double getScreen2ModelX(66,2773
+    private static double getScreen2ModelY(72,3031
+
+Stop.java,1150
+public class Stop 10,159
+    private GisPoint loc;12,235
+    private String name;13,261
+    private String id;14,286
+    private Collection<Line> lines 17,385
+    private Collection<Edge> forwardEdges 20,522
+    private Collection<Edge> backwardEdges 21,587
+    private Set<Stop> neighbours 24,754
+    private int subGraphId 27,857
+    public Stop(38,1151
+    public GisPoint getPoint(52,1569
+    public String getName(56,1634
+    public String getId(60,1692
+    public double distanceTo(67,1829
+    public double distanceTo(74,2009
+    public int compareTo(81,2166
+    public String toString(91,2397
+    public boolean atLocation(100,2736
+    public void addLine(113,3035
+    public Collection<Line> getLines(118,3126
+    public Collection<Edge> getForwardEdges(132,3740
+    public Collection<Edge> getBackwardEdges(137,3915
+    public Collection<Stop> getNeighbours(142,4087
+    public void addForwardEdge(147,4240
+    public void addBackwardEdge(152,4364
+    public void deleteEdgesOfType(158,4527
+    public void computeNeighbours(168,4913
+    public void setSubGraphId(181,5448
+    public int getSubGraphId(185,5525
+
+TestGraph.java,73
+public class TestGraph{TestGraph4,42
+    public static void main(6,67
+
+Transport.java,1359
+public class Transport 8,404
+    public static final double BUS_SPEED_KPH 9,429
+    public static final double BUS_SPEED_MPS 10,480
+    public static final double TRAIN_SPEED_KPH 11,548
+    public static final double TRAIN_SPEED_MPS 12,601
+    public static final double WALKING_SPEED_KPH 13,673
+    public static final double WALKING_SPEED_MPS 14,727
+    public static final double CABLECAR_SPEED_KPH 15,803
+    public static final double CABLECAR_SPEED_MPS 16,859
+    public static final double FERRY_SPEED_KPH 17,937
+    public static final double FERRY_SPEED_MPS 18,990
+    public static final double MAX_WALKING_DISTANCE_M 19,1065
+    public static final String WALKING 21,1141
+    public static final String TRAIN 22,1193
+    public static final String FERRY 23,1241
+    public static final String BUS 24,1289
+    public static final String CABLECAR 25,1333
+    private static final Set<String> TRAINS 27,1388
+    private static final Set<String> CABLECARS 28,1532
+    private static final Set<String> FERRIES=29,1606
+    public static String transpType(32,1680
+    public static boolean isTrain(45,2122
+    public static boolean isCableCar(54,2379
+    public static boolean isFerry(63,2595
+    public static boolean isWalking(72,2808
+    public static double getSpeedMPS(82,3042
+    public static String toTimeString(93,3423
+
+Zoning.java,1275
+public class Zoning 17,676
+    private String type;20,737
+    private String name;21,762
+    private double length;22,787
+    private double area;23,814
+    private Map<Map25,840
+    private Map<String, Shape> shapes 25,840
+    public  Zoning(30,1018
+    public String getType(70,2725
+    public void setType(74,2783
+    public String getName(78,2855
+    public void setName(82,2913
+    public void addZone(87,3025
+    public Map<Map92,3151
+    public Map<String, Shape> getZones(92,3151
+class Shape 99,3246
+    private int shapeID;100,3260
+    private double Shape_Length;101,3285
+    private double Shape_Area;102,3318
+    private List<GeoPoly> shapes;103,3349
+    public Shape(106,3403
+    public int getZONE(113,3642
+    public void setZONE(117,3700
+    public double getShape_Length(121,3778
+    public void setShape_Length(125,3852
+    public double getShape_Area(129,3956
+    public void setShape_Area(133,4026
+    public void addShape(138,4165
+    public List<GeoPoly> getShapes(143,4276
+class GeoPoly 150,4367
+    private ArrayList<GisPoint> points;151,4383
+    public GeoPoly(153,4424
+    public GeoPoly(157,4503
+    public ArrayList<GisPoint> getPoints(161,4589
+    public void setPoints(165,4664
+    public void add(169,4757
+
+zDeleteMe-PathCostComparator.java,68
+public class PathCostComparator 5,33
+    public int compare(7,113
+
+MapView.fxml,19
+<?xml version=1,0

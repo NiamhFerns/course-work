@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=Projection
+comment1.params=model\ gc
+comment1.target=javafx.geometry.Point2D\ model2Screen(javafx.geometry.Point2D,\ Controller)
+comment1.text=\r\n\ Project\ a\ node(vertex)\ to\ the\ pixels\ of\ the\ canvas\r\n\ @param\ model\r\n\ @param\ controller\ //\ this\ has\ the\ canvas\ scale\ and\ origin\r\n\ @return\ a\ 2D\ point\ on\ the\ canvas\r\n
+comment2.params=modelX\ drawingCenter\ scale\ originX
+comment2.target=double\ model2ScreenX(double,\ double,\ double,\ double)
+comment3.params=modelY\ drawingCenter\ scale\ originY
+comment3.target=double\ model2ScreenY(double,\ double,\ double,\ double)
+comment4.params=screen\ gc
+comment4.target=javafx.geometry.Point2D\ screen2Model(javafx.geometry.Point2D,\ Controller)
+comment5.params=screenPointX\ drawingCenter\ scale\ originX
+comment5.target=double\ screen2ModelX(double,\ double,\ double,\ double)
+comment6.params=screenPointY\ drawingCenter\ scale\ originY
+comment6.target=double\ screen2ModelY(double,\ double,\ double,\ double)
+numComments=7

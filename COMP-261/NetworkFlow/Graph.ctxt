@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.target=Graph
+comment0.text=\r\n\ Graph\ is\ the\ data\ structure\ that\ stores\ the\ collection\ of\ Cities\ and\ connections(edges).\ \r\n\ The\ Graph\ constructor\ is\ passed\ a\ Map\ of\ the\ Cities,\ indexed\ by\ CityId\ and\r\n\ \ a\ collection\ of\ the\ (origninal)\ Edges.\r\n\ The\ Cities\ in\ the\ map\ have\ their\ id,\ name\ and\ location.\r\n\ The\ Edges\ are\ defined\ by\ their\ ids\ (which\ are\ defaulted\ to\ 0\ in\ the\ Edge\ class),\ City\ from\ which\ it\ originates\ (fromCity),\ city\ to\ which\ it\ ends\ (toCity)\r\n
+comment1.params=cities\ originalEdges
+comment1.target=Graph(java.util.Map,\ java.util.Collection)
+comment1.text=\r\n\ Construct\ a\ new\ graph\ given\ a\ collection\ of\ Cities\ and\ a\ collection\ of\ edges\r\n
+comment2.params=
+comment2.target=void\ printGraphData()
+comment3.params=
+comment3.target=java.util.Map\ getCities()
+comment3.text=\r\n\ Return\ a\ map\ of\ all\ the\ Cities\ in\ the\ network\r\n
+comment4.params=
+comment4.target=java.util.Collection\ getOriginalEdges()
+comment4.text=\r\n\ Return\ a\ collection\ of\ all\ the\ edges\ in\ the\ network\r\n
+comment5.params=id
+comment5.target=City\ getCity(java.lang.String)
+comment5.text=\r\n\ Return\ the\ city\ cityid\ \r\n
+numComments=6

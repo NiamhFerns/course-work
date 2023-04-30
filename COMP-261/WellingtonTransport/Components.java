@@ -19,42 +19,47 @@ public class Components{
     // Alternatively, during the backward pass, you could use a Map<Stop,Stop>
     // to record the "root" node of each component, following the original version
     // of Kosaraju's algorithm, but this is unnecessarily complex.
+    private static ArrayList<Stop> stopList;
+    private static HashSet<Stop> visited;
 
     
     public static void findComponents(Graph graph) {
         System.out.println("calling findComponents");
         graph.resetSubGraphIds();
 
-        ArrayList<Stop> stopList = new ArrayList<>();
-        HashSet<Stop> visited = new HashSet<>();
+        stopList = new ArrayList<>();
+        visited = new HashSet<>();
+
 
         // Add to list.
         for (var stop : graph.getStops()) {
             if (visited.contains(stop)) continue;
-            Components.forwardVisit(stop, stopList, visited);
+            forwardVisit(stop);
         }
 
         // Find components.
         Collections.reverse(stopList);
         for (var stop : stopList) {
-            if (stop.getSubGraphId() != -1) continue;
-            backwardVisit(stop, graph.getSubGraphCount());
+            if (stop.getSubGraphId() > -1) continue;
+            backwardVisit(stop, graph);
             graph.incrementSubGraphCount();
         }
     }
 
-    private static void forwardVisit(Stop stop, ArrayList<Stop> stopList, HashSet<Stop> visited) {
+    private static void forwardVisit(Stop stop) {
         if (visited.contains(stop)) return;
         visited.add(stop);
-        for (var nEdge : stop.getForwardEdges())
-            forwardVisit(nEdge.toStop(), stopList, visited);
+        for (var nEdge : stop.getForwardEdges()) {
+            forwardVisit(nEdge.toStop());
+        }
         stopList.add(stop);
     }
 
-    private static void backwardVisit(Stop stop, int componentNumber) {
-        if (stop.getSubGraphId() != -1) return;
-        stop.setSubGraphId(componentNumber);
-        for (var nEdge : stop.getBackwardEdges())
-            backwardVisit(nEdge.fromStop(), componentNumber);
+    private static void backwardVisit(Stop stop, Graph graph) {
+        if (stop.getSubGraphId() > -1) return;
+        stop.setSubGraphId(graph.getSubGraphCount());
+        for (var nEdge : stop.getBackwardEdges()) {
+            backwardVisit(nEdge.fromStop(), graph);
+        }
     }
 }
