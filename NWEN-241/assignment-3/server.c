@@ -10,25 +10,36 @@
 // Flag for use by child processes.
 int RUNNING = 1;
 
+// Structure containing information about the server.
 struct server_instance {
     int f_descriptor;
     struct sockaddr_in address;
 };
 
+// Structure containing information about some arbitrary client.
 struct client_instance {
     int c_descriptor;
     struct sockaddr_in address;
 };
 
+// General logging functions for the server.
 void err(char* err_msg, int code);
 void warn(char* warn_msg);
 void success(char* s_msg);
 
+// Instantiate the server running on some port and it.
 struct server_instance* start_server(const int port);
+
+// Wait for clients and once they're accepted, start a process for them.
 void accept_client(const struct server_instance* s_instance);
+
+// Maintain a connection to a client in the child proccess once a connection has been made.
 void maintain_client(const struct server_instance* s_instance, struct client_instance* c_instance);
 
+// Server get command. Sends contents of a file.
 void server_get(struct client_instance* c_instance, const char* argument);
+
+// Server put comamnd. Writes to file.
 void server_put(struct client_instance* c_instance, const char* argument);
 
 int main(int argc, char* argv[])
@@ -100,7 +111,7 @@ void accept_client(const struct server_instance* s_instance)
         warn("Failed to accept client");
     success("Client accepted.");
 
-    // Fork here.
+    // Fork here after client accepted.
     pid_t pid = fork();
 
     // Parent instance should return to accept new clients.
@@ -121,6 +132,7 @@ void accept_client(const struct server_instance* s_instance)
 
 void maintain_client(const struct server_instance* s_instance, struct client_instance* c_instance)
 {
+    // Intital Communication
     char* msg = "HELLO\n";
 
     if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
@@ -129,7 +141,9 @@ void maintain_client(const struct server_instance* s_instance, struct client_ins
 
     char buffer[100];
 
+    // Continuously read commands from the client.
     while (1) {
+        // Retreive command.
         memset(buffer, 0, 100);
         if ((read(c_instance->c_descriptor, buffer, 100)) < 0) {
             warn("Failed to read from client.");
@@ -144,6 +158,7 @@ void maintain_client(const struct server_instance* s_instance, struct client_ins
         memset(argument, 0, 100);
         sscanf(buffer, "%s %s", request, argument);
 
+        // Action command after splitting.
         if (strlen(request) == 3 && !strncasecmp(request, "GET", 3)) {
             server_get(c_instance, argument);
         } else if (strlen(request) == 3 && !strncasecmp(request, "PUT", 3)) {
@@ -171,7 +186,7 @@ void server_get(struct client_instance* c_instance, const char* argument)
         return;
     }
 
-    // Open File
+    // Open file for reading.
     FILE* file_descriptor;
     if ((file_descriptor = fopen(argument, "r")) == NULL) {
         char* msg = "SERVER 404 Not Found\n";
@@ -181,9 +196,11 @@ void server_get(struct client_instance* c_instance, const char* argument)
         return;
     }
 
+    // On file found.
     char* msg = "SEVER 200 OK\n\n";
     write(c_instance->c_descriptor, msg, strlen(msg));
 
+    // Write contents of file to client.
     char c[2];
     memset(c, 0, 2);
     while (!feof(file_descriptor)) {
@@ -203,6 +220,7 @@ void server_get(struct client_instance* c_instance, const char* argument)
 
 void server_put(struct client_instance* c_instance, const char* argument)
 {
+    // Check argument.
     if (strlen(argument) == 0) {
         char* msg = "SERVER 502 Command Error\n";
         if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
@@ -211,6 +229,7 @@ void server_put(struct client_instance* c_instance, const char* argument)
         return;
     }
 
+    // Open file for writing.
     FILE* file_descriptor;
     if ((file_descriptor = fopen(argument, "w")) == NULL) {
         char* msg = "SERVER 501 Put Error\n";
@@ -220,6 +239,7 @@ void server_put(struct client_instance* c_instance, const char* argument)
         return;
     }
 
+    // Continuously read in chars from the client using a flag to stop when double new lines are seen.
     int STOP = 0;
     char buffer[1000];
     memset(buffer, 0, 1000);
@@ -237,6 +257,7 @@ void server_put(struct client_instance* c_instance, const char* argument)
         }
     }
 
+    // On success.
     char* msg = "SEVER 201 Created\n";
     if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
         warn("Failed to write to socket.");
