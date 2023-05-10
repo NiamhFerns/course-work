@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,7 +6,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <ctype.h>
 
 // Flag for use by child processes.
 int RUNNING = 1;
@@ -24,9 +24,12 @@ void err(char* err_msg, int code);
 void warn(char* warn_msg);
 void success(char* s_msg);
 
-struct server_instance* server_start(const int port);
-void server_accept_client(const struct server_instance* s_instance);
+struct server_instance* start_server(const int port);
+void accept_client(const struct server_instance* s_instance);
 void maintain_client(const struct server_instance* s_instance, struct client_instance* c_instance);
+
+void server_get(struct client_instance* c_instance, const char* argument);
+void server_put(struct client_instance* c_instance, const char* argument);
 
 int main(int argc, char* argv[])
 {
@@ -37,16 +40,16 @@ int main(int argc, char* argv[])
 
     // Server Setup
     const int port = atoi(argv[1]);
-    const struct server_instance* s_instance = server_start(port);
+    const struct server_instance* s_instance = start_server(port);
 
     // Run Server
     while (RUNNING)
-        server_accept_client(s_instance);
+        accept_client(s_instance);
 
     return 0;
 }
 
-struct server_instance* server_start(const int port)
+struct server_instance* start_server(const int port)
 {
     // Create socket.
     int f_descriptor = socket(AF_INET, SOCK_STREAM, 0);
@@ -86,7 +89,7 @@ struct server_instance* server_start(const int port)
     return instance;
 }
 
-void server_accept_client(const struct server_instance* s_instance)
+void accept_client(const struct server_instance* s_instance)
 {
     // Accept a client connection.
     struct sockaddr_in client_address;
@@ -100,15 +103,15 @@ void server_accept_client(const struct server_instance* s_instance)
     // Fork here.
     pid_t pid = fork();
 
-    // Fork error.
-    if (pid < 0)
-        err("Server failed to fork process for new client", 5);
-
     // Parent instance should return to accept new clients.
-    if (pid > 0)
+    if (pid > 0) {
+        // Hand off maintenance of this client to the child proccess.
+        close(client_f_descriptor);
         return;
+    }
 
     // Child instance.
+    // Don't account for pid_t < 0 because of Task 3 brief.
     struct client_instance* c_instance = malloc(sizeof(struct client_instance));
     c_instance->c_descriptor = client_f_descriptor;
     c_instance->address = client_address;
@@ -118,13 +121,14 @@ void server_accept_client(const struct server_instance* s_instance)
 
 void maintain_client(const struct server_instance* s_instance, struct client_instance* c_instance)
 {
-    char buffer[100];
-    memset(buffer, 0, 100);
-    strncpy(buffer, "Hello, world!\n", strlen("Hello, world!\n"));
+    char* msg = "HELLO\n";
 
-    if ((write(c_instance->c_descriptor, buffer, 100)) < 0) {
-        err("Failed to write to socket!", 5);
+    if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
+        warn("Failed to write to socket.");
     }
+
+    char buffer[100];
+
     while (1) {
         memset(buffer, 0, 100);
         if ((read(c_instance->c_descriptor, buffer, 100)) < 0) {
@@ -132,28 +136,113 @@ void maintain_client(const struct server_instance* s_instance, struct client_ins
             close(c_instance->c_descriptor);
             break;
         }
-        printf("Client requested: %s\n", buffer);
 
-        char request[10]; // This is 10 to account for client typos and bad commands.
+        // This is 10 to account for client typos and bad commands.
+        char request[10];
+        memset(request, 0, 10);
         char argument[100];
+        memset(argument, 0, 100);
         sscanf(buffer, "%s %s", request, argument);
 
-
         if (strlen(request) == 3 && !strncasecmp(request, "GET", 3)) {
-            printf("Get shit: Len: %lu\n", strlen(request));
-        }
-        else if (strlen(request) == 3 && !strncasecmp(request, "PUT", 3)) {
-            printf("Put shit: Len: %lu\n", strlen(request));
-        }
-        else if (strlen(request) == 3 && !strncasecmp(request, "BYE", 3)) {
-            printf("Hi");
-            // close(c_instance->c_descriptor);
+            server_get(c_instance, argument);
+        } else if (strlen(request) == 3 && !strncasecmp(request, "PUT", 3)) {
+            server_put(c_instance, argument);
+        } else if (strlen(request) == 3 && !strncasecmp(request, "BYE", 3)) {
+            close(c_instance->c_descriptor);
             return;
-        }
-        else {
-            printf("SERVER 502 Command Error\n");
+        } else {
+            char* msg = "SERVER 502 Command Error\n";
+            if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
+                warn("Failed to write to socket.");
+            }
         }
     }
+}
+
+void server_get(struct client_instance* c_instance, const char* argument)
+{
+    // Check argument.
+    if (strlen(argument) == 0) {
+        char* msg = "SERVER 500 Get Error\n";
+        if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
+            warn("Failed to write to socket.");
+        }
+        return;
+    }
+
+    // Open File
+    FILE* file_descriptor;
+    if ((file_descriptor = fopen(argument, "r")) == NULL) {
+        char* msg = "SERVER 404 Not Found\n";
+        if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
+            warn("Failed to write to socket.");
+        }
+        return;
+    }
+
+    char* msg = "SEVER 200 OK\n\n";
+    write(c_instance->c_descriptor, msg, strlen(msg));
+
+    char c[2];
+    memset(c, 0, 2);
+    while (!feof(file_descriptor)) {
+        c[0] = fgetc(file_descriptor);
+        if ((write(c_instance->c_descriptor, c, 2)) < 0) {
+            warn("Failed to write to socket.");
+        }
+    }
+
+    fclose(file_descriptor);
+
+    msg = "\n\n\n";
+    if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
+        warn("Failed to write to socket.");
+    }
+}
+
+void server_put(struct client_instance* c_instance, const char* argument)
+{
+    if (strlen(argument) == 0) {
+        char* msg = "SERVER 502 Command Error\n";
+        if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
+            warn("Failed to write to socket.");
+        }
+        return;
+    }
+
+    FILE* file_descriptor;
+    if ((file_descriptor = fopen(argument, "w")) == NULL) {
+        char* msg = "SERVER 501 Put Error\n";
+        if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
+            warn("Failed to write to socket.");
+        }
+        return;
+    }
+
+    int STOP = 0;
+    char buffer[1000];
+    memset(buffer, 0, 1000);
+    while (STOP != 2) {
+        memset(buffer, 0, 1000);
+        if ((read(c_instance->c_descriptor, buffer, 1000)) < 0) {
+            warn("Failed to read from client.");
+        }
+        for (int i = 0; i < strlen(buffer); ++i) {
+            fputc(buffer[i], file_descriptor);
+            if (buffer[i] == '\n')
+                STOP++;
+            else
+                STOP = 0;
+        }
+    }
+
+    char* msg = "SEVER 201 Created\n";
+    if ((write(c_instance->c_descriptor, msg, strlen(msg))) < 0) {
+        warn("Failed to write to socket.");
+    }
+
+    fclose(file_descriptor);
 }
 
 void err(char* err_msg, int code)
