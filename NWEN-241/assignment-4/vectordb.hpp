@@ -21,6 +21,7 @@ private:
 
 public:
     VectorDbTable();
+    ~VectorDbTable();
 
     virtual int rows() const override;
     virtual movie* get(int row_num) const override;
