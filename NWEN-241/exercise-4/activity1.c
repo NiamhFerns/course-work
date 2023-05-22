@@ -16,15 +16,17 @@ int main()
         exit(1);
 
     case 0:
-        // Use execl system call to execute the ps -A command.
-        // If it fails, display error message "Error executing exec"
+        ret_exec = execl("/bin/ps", "ps", "-A", NULL);
+        if (ret_exec < 0) printf("Error executing exec");
         break;
 
     default:
-        // Wait for termination of child process then if WIFEXITED(status) is set, display the following values in the same order:
-        // - Process ID of the parent process.
-        // - Process ID of the child process.
-        // - The termination status of the child process. 
+        pid = wait(&status);
+        if (WIFEXITED(status)) {
+            printf("%d\n", getpid());
+            printf("%d\n", pid);
+            printf("%d\n", WEXITSTATUS(status));
+        }
         break;
     }
 

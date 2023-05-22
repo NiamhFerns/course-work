@@ -1,88 +1,94 @@
-#include<stdio.h>
-#include<sys/socket.h>
-#include<string.h>
-#include<stdlib.h>
-#include <netinet/in.h> 
-#include<unistd.h>
-
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 #define DEFAULT_STRLEN 100
-#define SERVER_PORT  23456
+#define SERVER_PORT 23456
 
-int create_server_sock(struct sockaddr_in *address);
+int create_server_sock(struct sockaddr_in* address);
 void handle_client(int clientfd);
-void reverse_input(char *word, int begin, int end);
+void reverse_input(char* word, char outmsg[DEFAULT_STRLEN]);
+
+void err(char* err_msg, int code)
+{
+    printf("ERROR: %s\n", err_msg);
+    exit(code);
+}
+
+void warn(char* warn_msg) { printf("WARNING: %s\n", warn_msg); }
+
+void success(char* s_msg) { printf("SUCCESS: %s\n", s_msg); }
 
 int main(void)
 {
-    int sockfd;
-    
-    struct sockaddr_in address; 
-    
-          
-    /* Create and bind socket using the function create_server_sock. Print an error message if unsucessful*/
-   
-    
+    struct sockaddr_in address;
+    int sockfd = create_server_sock(&address);
+
     /* Listen for incoming connections. Print an error message if unsucessful */
-    if(listen(sockfd, SOMAXCONN) < 0) {
-        printf("Error: Failed to listen for connections\n"); 
-        return 0;
-    }
-               
-        /* Accept */
-        while(1){
-        int addrlen = sizeof(address); 
-        int clientfd = accept(sockfd, (struct sockaddr *)&address,  
-                       (socklen_t*)&addrlen);
-    
+    if (listen(sockfd, SOMAXCONN) < 0)
+        err("Failed to listen for connections.", 3);
+    success("Listening on server port 2345.");
+
+    /* Accept */
+    for (;;) {
+        int addrlen = sizeof(address);
+        int clientfd = accept(sockfd, (struct sockaddr*)&address,
+            (socklen_t*)&addrlen);
         /* Handle client */
         handle_client(clientfd);
-        }
+        close(clientfd);
+    }
+
     return 0;
 }
 
-int create_server_sock(struct sockaddr_in *address)
+int create_server_sock(struct sockaddr_in* address)
 {
-    int fd;
-    
-   // Create socket file descriptor. Return -1 if error
-    
-    
+    int f_descriptor = socket(AF_INET, SOCK_STREAM, 0);
+    if (f_descriptor < 0)
+        err("Failed to create socket.", 2);
+    success("Socket created.");
 
-    // Define Server address
-    
+    // Create Server Address.
+    address->sin_family = AF_INET;
+    address->sin_port = htons(SERVER_PORT);
+    address->sin_addr.s_addr = INADDR_ANY;
+    success("Address created.");
 
-       
-    // Bind socket to server address. Return -2 if error
-    
-    
-    //return socket file descriptor
+    // Bind Address
+    int b_descriptor = bind(f_descriptor, (struct sockaddr*)address,
+        sizeof(struct sockaddr_in));
+    if (b_descriptor < 0)
+        err("Failed to bind to port.", 3);
+    success("Port bound.");
+    return f_descriptor;
 }
-
 
 void handle_client(int clientfd)
 {
-    char outmsg[DEFAULT_STRLEN];
-    char inmsg[DEFAULT_STRLEN];
-    
+    char outmsg[DEFAULT_STRLEN] = {};
+    char inmsg[DEFAULT_STRLEN] = {};
 
-    if(clientfd < 0) {
-        printf("Error: Failed to accept client connection\n"); 
+    if (clientfd < 0) {
+        printf("Error: Failed to accept client connection\n");
         return;
     }
-     /* Read the msg from the client*/
-            
-        
-               
+
+    if (read(clientfd, inmsg, DEFAULT_STRLEN) < 0)
+        warn("Error reading from client.");
     
-     /* Reverse the msg using function reverse_input*/
-     
-     
-    
-     /* Send the reversed string back to client*/
-        
+    reverse_input(inmsg, outmsg);
+
+    if (write(clientfd, outmsg, DEFAULT_STRLEN) < 0)
+        warn("Error writing to client.");
 }
 
-void reverse_input(char *word, int begin, int end){
-  
+void reverse_input(char* word, char reversed_word[DEFAULT_STRLEN])
+{
+    int actual_str_len = strlen(word);
+    for (int i = actual_str_len - 1, j = 0; i >= 0; i--, j++)
+        reversed_word[j] = word[i];
 }
