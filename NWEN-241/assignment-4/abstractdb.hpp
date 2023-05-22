@@ -14,6 +14,8 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 namespace nwen {
 struct movie {
     unsigned long id;
@@ -24,11 +26,11 @@ struct movie {
 
 class AbstractDbTable {
 public:
-    virtual int rows() const;
-    virtual movie* get(int row_num) const;
-    virtual void add(movie new_movie) const;
-    virtual bool update(unsigned long id, movie to_update) const;
-    virtual bool remove(unsigned long id) const;
+    virtual int rows() const = 0;
+    virtual movie* get(int row_num) const = 0;
+    virtual bool add(movie new_movie) const = 0;
+    virtual bool update(unsigned long id, movie to_update) = 0;
+    virtual bool remove(unsigned long id) = 0;
     bool loadCSV(std::string path);
     bool saveCSV(std::string path);
 };

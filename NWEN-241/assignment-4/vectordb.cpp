@@ -30,12 +30,15 @@ nwen::movie* nwen::VectorDbTable::get(int row_num) const
     return &(*entries)[row_num];
 }
 
-void nwen::VectorDbTable::add(nwen::movie new_movie) const
+bool nwen::VectorDbTable::add(nwen::movie new_movie) const
 {
+    for (auto entry : *entries)
+        if (new_movie.id == entry.id) return false;
     entries->push_back(new_movie);
+    return true;
 }
 
-bool nwen::VectorDbTable::update(unsigned long id, movie to_update) const
+bool nwen::VectorDbTable::update(unsigned long id, movie to_update)
 {
     for (int i = 0; i < entries->size(); ++i) {
         if ((*entries)[i].id == id) {
@@ -46,7 +49,7 @@ bool nwen::VectorDbTable::update(unsigned long id, movie to_update) const
     return false;
 }
 
-bool nwen::VectorDbTable::remove(unsigned long id) const
+bool nwen::VectorDbTable::remove(unsigned long id)
 {
     for (int i = 0; i < entries->size(); ++i) {
         if ((*entries)[i].id == id) {

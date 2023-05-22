@@ -24,9 +24,9 @@ public:
 
     virtual int rows() const override;
     virtual movie* get(int row_num) const override;
-    virtual void add(movie new_movie) const override;
-    virtual bool update(unsigned long id, movie to_update) const override;
-    virtual bool remove(unsigned long id) const override;
+    virtual bool add(movie new_movie) const override;
+    virtual bool update(unsigned long id, movie to_update) override;
+    virtual bool remove(unsigned long id) override;
 };
 }
 

@@ -15,6 +15,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 #define ID 0
 #define TITLE 1
@@ -36,19 +37,19 @@ bool nwen::AbstractDbTable::loadCSV(std::string path)
 
     while (std::getline(input, line)) {
         std::stringstream stream;
+        stream << line;
         std::string tokens[4];
         
         // Get our entry details.
         for (int i = 0; std::getline(stream, token, delimiter); i++) {
             tokens[i] = token;
-            i++;
         }
 
         // Create our entry.
         movie m;
         m.id = std::strtoul(tokens[ID].c_str(), NULL, 0);
         strncpy(m.title, tokens[TITLE].c_str(), 50); 
-        m.id = (unsigned short)std::strtoul(tokens[YEAR].c_str(), NULL, 0);
+        m.year = (unsigned short)std::strtoul(tokens[YEAR].c_str(), NULL, 0);
         strncpy(m.director, tokens[DIRECTOR].c_str(), 50); 
 
         add(m); 
@@ -69,7 +70,7 @@ bool nwen::AbstractDbTable::saveCSV(std::string path)
     movie *m;
 
     while ((m = this->get(i++))) {
-        output << m->id << "," << m->title << "," << m->year << "," << m->director << "\n";
+        output << m->id << ",\"" << m->title << "\"," << m->year << ",\"" << m->director << "\"\n";
     }
 
     output.close();
