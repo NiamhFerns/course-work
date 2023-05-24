@@ -74,7 +74,7 @@ bool nwen::AbstractDbTable::saveCSV(std::string path)
     movie* m;
 
     while ((m = this->get(i++))) {
-        output << m->id << ",\"" << m->title << "\"," << m->year << ",\"" << m->director << "\"\n";
+        output << m->id << "," << m->title << "," << m->year << "," << m->director << "\n";
     }
 
     output.close();
