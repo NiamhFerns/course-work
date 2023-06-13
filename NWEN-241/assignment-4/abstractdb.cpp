@@ -23,7 +23,7 @@
 #define YEAR 2
 #define DIRECTOR 3
 
-bool nwen::AbstractDbTable::loadCSV(std::string path)
+bool nwen::AbstractDbTable::loadCSV(const std::string & path)
 {
     // Open file.
     std::fstream input;
@@ -61,7 +61,7 @@ bool nwen::AbstractDbTable::loadCSV(std::string path)
     return true;
 }
 
-bool nwen::AbstractDbTable::saveCSV(std::string path)
+bool nwen::AbstractDbTable::saveCSV(const std::string & path)
 {
     // Open a file steam.
     std::fstream output;

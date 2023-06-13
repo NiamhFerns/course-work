@@ -37,11 +37,11 @@ public:
     /*
      * Add a new row to the database.
      */
-    virtual bool add(movie new_movie) const = 0;
+    virtual bool add(const movie & new_movie) const = 0;
     /*
      * Update a row in the database with new information.
      */
-    virtual bool update(unsigned long id, movie to_update) = 0;
+    virtual bool update(unsigned long id, const movie & to_update) = 0;
     /*
      * Remove a row from the database.
      */
@@ -49,11 +49,11 @@ public:
     /*
      * From a CSV file, load our database into memeory.
      */
-    bool loadCSV(std::string path);
+    bool loadCSV(const std::string & path);
     /*
      * To a CSV file, save our database from memory.
      */
-    bool saveCSV(std::string path);
+    bool saveCSV(const std::string & path);
 };
 }
 

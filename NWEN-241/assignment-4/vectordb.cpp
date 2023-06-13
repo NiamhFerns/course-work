@@ -39,7 +39,7 @@ nwen::movie* nwen::VectorDbTable::get(int row_num) const
     return &(*entries)[row_num];
 }
 
-bool nwen::VectorDbTable::add(nwen::movie new_movie) const
+bool nwen::VectorDbTable::add(const nwen::movie & new_movie) const
 {
     // Avoid duplicate entries.
     for (auto entry : *entries)
@@ -51,7 +51,7 @@ bool nwen::VectorDbTable::add(nwen::movie new_movie) const
     return true;
 }
 
-bool nwen::VectorDbTable::update(unsigned long id, movie to_update)
+bool nwen::VectorDbTable::update(unsigned long id, const movie & to_update)
 {
     // Update entry if it exists.
     for (int i = 0; i < entries->size(); ++i) {
