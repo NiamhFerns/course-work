@@ -1,59 +1,58 @@
-import javafx.util.Pair;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Write a description of class PageRank here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Niamh Ferns
+ * @version 28 05 2023
  */
-public class PageRank
-{
-    //class members 
-    private static double dampingFactor = .85;
-    private static int iter = 10;
+public class PageRank {
+    private static final double DAMPING_FACTOR = .85;
+    private static final int ITER_COUNT = 10;
+
     /**
-     * build the fromLinks and toLinks 
+     * Make sure the cities have the correct links.
+     *
+     * @param graph the original network.
      */
-    //TODO: Build the data structure to support Page rank. For each edge in the graph add the corresponding cities to the fromLinks and toLinks
-    public static void computeLinks(Graph graph){
-        // TODO
-
-        //printPageRankGraphData(graph);  ////may help in debugging
-        // END TODO
+    public static void computeLinks(Graph graph) {
+        GraphUtils.computeLinks(graph); // PageRank.java shouldn't be responsible for this...
+        GraphUtils.printCityData(graph); // PageRank.java shouldn't be responsible for this either...
     }
 
-    public static void printPageRankGraphData(Graph graph){
-        System.out.println("\nPage Rank Graph");
+    /**
+     * Computes and prints the rank for each node in the network.
+     *
+     * @param graph the original network.
+     */
+    public static void computePageRank(Graph graph) {
+        var nNodes = (long) graph.getCities().keySet().size();
+        var pageRanks = new HashMap<City, Double>();
 
-        for (City city : graph.getCities().values()){
-            System.out.print("\nCity: "+city.toString());
-            //for each city display the in edges 
-            System.out.print("\nIn links to cities:");
-            for(City c:city.getFromLinks()){
+        for (var city : graph.getCities().values()) {
 
-                System.out.print("["+c.getId()+"] ");
+            pageRanks.put(city, 1.0 / nNodes);
+        }
+
+        var count = 1;
+
+        while (count < ITER_COUNT) {
+            for (var node : graph.getCities().values()) {
+                var nRank = 0.0;
+
+                for (var fromLink : node.getFromLinks()) {
+                    nRank += pageRanks.get(fromLink) / fromLink.getToLinks().size();
+                }
+
+                nRank = ((1 - DAMPING_FACTOR) / nNodes) + DAMPING_FACTOR * nRank;
+                pageRanks.put(node, nRank);
             }
 
-            System.out.print("\nOut links to cities:");
-            //for each city display the out edges 
-            for(City c: city.getToLinks()){
-                System.out.print("["+c.getId()+"] ");
-            }
-            System.out.println();;
+            count++;
+        }
 
-        }    
-        System.out.println("=================");
-    }
-    //TODO: Compute rank of all nodes in the network and display them at the console
-    public static void computePageRank(Graph graph){
-        // TODO
-
-        
-        // END TODO
-
+        for (var city : pageRanks.keySet().stream().sorted().toList()) {
+            System.out.println(city.getName() + "[" + city.getId() + "]: " + pageRanks.get(city));
+        }
     }
 }

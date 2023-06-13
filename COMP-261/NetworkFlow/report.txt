@@ -1,0 +1,13 @@
+Niamh Kirsty Ferns
+300 632 732
+
+Network Flow Assignment
+Edmond Karp: Complete
+Page Rank: Complete
+Challenge: Incomplete
+
+I didn't do the challenge because of time constraints but I know how I would have solved it.
+
+The method to solve would be to have a separate function that checks the page rank for the node that we're checking repeatedly (for however many inward connections this node has)
+and then we store whatever the highest "difference" is to the control page rank (the page rank with nothing removed). Whichever one yields the greatest difference by the end of this
+loop is the greatest page rank difference.
